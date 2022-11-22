@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import '../components/Tutorial.vue'
 </script>
 
 <template>
-    <Tutorial />
+    <h1>LeerLevels</h1>
 </template>
