@@ -4,3 +4,17 @@ html, body {
     box-sizing: border-box;
     font-family: sans-serif;
 }
+
+main {
+    margin: auto;
+    max-width: 1200px;
+}
+
+section {
+    margin: 50px 0;
+}
+
+.button-delete {
+    color: white;
+    background: rgb(202, 60, 60);
+}
