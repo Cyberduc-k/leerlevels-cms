@@ -46,7 +46,8 @@ export default defineComponent({
         <section>
             <header class="pure-g">
                 <h1>Users</h1>
-                <NuxtLink class="pure-button pure-button-primary button-add" to="/users/add">Add User</NuxtLink>
+                <NuxtLink class="pure-button pure-button-primary button-add" to="CreateUser">Add User</NuxtLink>
+
             </header>
             <table class="pure-table pure-table-horizontal">
                 <thead>

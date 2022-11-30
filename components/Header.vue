@@ -15,6 +15,11 @@
                         <a class="pure-menu-link" :href="href" @click="navigate">Users</a>
                     </li>
                 </NuxtLink>
+                <NuxtLink to="/forums" custom v-slot="{ href, navigate, isActive }">
+                    <li :class="{ 'pure-menu-item': true, 'pure-menu-selected': isActive }">
+                        <a class="pure-menu-link" :href="href" @click="navigate">forums</a>
+                    </li>
+                </NuxtLink>
             </ul>
         </nav>
     </header>
