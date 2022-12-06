@@ -2,8 +2,8 @@
 import Header from "@/components/Header.vue";
 import UserRow from "@/components/UserRow.vue";
 import { defineComponent } from "vue"
-import { User } from "@/src/User";
-import { get } from "@/src/requests";
+import { User, UserRole } from "@/src/User";
+import { get, del } from "@/src/requests";
 
 export default defineComponent({
     components: {
@@ -16,10 +16,27 @@ export default defineComponent({
         limit: 10,
     }),
     methods: {
+        addUser() {
+            this.users.push({
+                isNew: true,
+                id: "N/A",
+                email: "",
+                firstName: "",
+                lastName: "",
+                userName: "",
+                role: UserRole.Student,
+            });
+        },
         async deleteUser(id: string) {
             if (confirm(`Are you sure you wish to delete user ${id}`)) {
                 const index = this.users.findIndex(u => u.id == id);
                 this.users.splice(index, 1);
+                
+                try {
+                    await del(`/users/${id}`);
+                } catch (e) {
+                    console.error(e);
+                }
             }
         },
         prevPage() {
@@ -46,7 +63,7 @@ export default defineComponent({
         <section>
             <header class="pure-g">
                 <h1>Users</h1>
-                <NuxtLink class="pure-button pure-button-primary button-add" to="CreateUser">Add User</NuxtLink>
+                <button class="pure-button pure-button-primary button-add" @click="addUser">Add User</button>
 
             </header>
             <table class="pure-table pure-table-horizontal">

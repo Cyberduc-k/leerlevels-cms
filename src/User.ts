@@ -5,6 +5,8 @@ export interface User {
     lastName: string,
     userName: string,
     role: number,
+    
+    isNew: boolean,
 }
 
 export enum UserRole {

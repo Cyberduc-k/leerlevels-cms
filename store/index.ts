@@ -1,5 +1,5 @@
 import { Store, GetterTree, ActionTree, MutationTree } from 'vuex';
-import { login, post } from '@/src/requests';
+import { post } from '@/src/requests';
 import { get } from '@/src/requests';
 import { User } from '@/src/User';
 
@@ -31,13 +31,12 @@ export const mutations: MutationTree<RootState> = {
 export const actions: ActionTree<RootState, RootState> = {
     async login({ state }, details: { email: string, password: string }) {
         try {
-            const res: { accessToken: string } = await login('/login', details)
+            const res: { accessToken: string } = await post('/login', details)
 
             //this is not allowed, you have to commit this to a mutation instead
             //state.authToken = res.accessToken;
             
             this.commit('setToken', res.accessToken);
-
             this.commit('setStateUser', await get('/users/user'));
 
             console.log(state.authToken + " " + state.stateUser);

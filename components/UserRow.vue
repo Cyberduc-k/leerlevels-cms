@@ -1,32 +1,84 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue"
 import { User, UserRole } from "@/src/User"
+import { post, put } from "~/src/requests";
+import Editable from "./Editable.vue";
 
 export default defineComponent({
+    components: {
+        Editable,
+    },
     props: {
         user: {
             type: Object as PropType<User>,
             required: true,
         },
     },
-    data: () => ({
-        userRole: UserRole,
-    }),
+    data() {
+        return {
+            editable: this.user.isNew,
+            userRole: UserRole,
+            email: this.user.email,
+            firstName: this.user.firstName,
+            lastName: this.user.lastName,
+            userName: this.user.userName,
+            role: this.user.role,
+        };
+    },
+    methods: {
+        edit() {
+            this.editable = true;
+        },
+        async save() {
+            try {
+                if (this.user.isNew) {
+                    let password = prompt("Fill in a password for the user");
+                
+                    if (password !== null) {
+                        this.user.isNew = false;
+                        let response = await post('/users', {
+                            email: this.email,
+                            firstName: this.firstName,
+                            lastName: this.lastName,
+                            userName: this.userName,
+                            role: this.role,
+                            password,
+                        });
+                
+                        this.user.id = response.id;
+                    }
+                } else {
+                    await put(`/users/${this.user.id}`, {
+                        email: this.email,
+                        firstName: this.firstName,
+                        lastName: this.lastName,
+                        userName: this.userName,
+                        role: this.role,
+                    });
+                }
+            } catch (e) {
+                console.error(e);
+            } finally {
+                this.editable = false;
+            }
+        }
+    },
     emits: ['deleteUser'],
 })
 </script>
 
 <template>
-    <tr>
+    <tr :class="{ editable }">
         <td>{{ user.id }}</td>
-        <td>{{ user.email }}</td>
-        <td>{{ user.firstName }}</td>
-        <td>{{ user.lastName }}</td>
-        <td>{{ user.userName }}</td>
-        <td>{{ userRole[user.role] }}</td>
+        <td><Editable :editable="editable" v-model="email" /></td>
+        <td><Editable :editable="editable" v-model="firstName" /></td>
+        <td><Editable :editable="editable" v-model="lastName" /></td>
+        <td><Editable :editable="editable" v-model="userName" /></td>
+        <td>{{ userRole[role] }}</td>
         <td>
             <div class="pure-button-group" role="group">
-                <NuxtLink class="pure-button pure-button-primary" :to="`/users/${user.id}/edit`">Edit</NuxtLink>
+                <button v-if="editable" class="pure-button pure-button-primary" @click="save">Save</button>
+                <button v-else class="pure-button pure-button-primary" @click="edit">Edit</button>
                 <button class="pure-button button-delete" @click="$emit('deleteUser', user.id)">Delete</button>
             </div>
         </td>
@@ -36,5 +88,10 @@ export default defineComponent({
 <style scoped>
 .pure-button-group {
     float: right;
+}
+
+.pure-button-group button:first-child {
+    box-sizing: content-box;
+    width: 37px;
 }
 </style>
