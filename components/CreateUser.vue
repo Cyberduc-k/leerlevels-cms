@@ -1,7 +1,7 @@
 <script lang="ts">
 import { post } from "@/src/requests";
 import { defineComponent } from "vue"
-import { UserRole } from "@/src/User";
+//import { UserRole } from "@/src/User";
 
 export default defineComponent( {
   data() {
@@ -12,7 +12,7 @@ export default defineComponent( {
             FirstName:'',
             LastName:'',
             UserName:'',
-            UserRole: UserRole  
+            UserRole: 0,  
         },    
     }
   },
@@ -50,3 +50,21 @@ export default defineComponent( {
  <button color="primary" @click="addUser"> Add User </button>
 </form>
 </template>
+
+<style>
+input {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: 2px solid black;
+  border-radius: 4px;
+}
+button{
+  background-color: rgb(38, 131, 193);
+  color: white;
+  border: none;
+  padding: 15px 32px;
+}
+
+</style>
