@@ -1,5 +1,5 @@
 <template>
-    <main v-show="!isLoggedIn">
+    <main>
         <section class="loginWindow">
             <h1>LeerLevels CMS<br>management portal login</h1>
                 <section class="loginRow">
@@ -15,7 +15,7 @@
                         <input class="loginInput" type="password" v-model="passwordInput"/>
                     </section>
                 </section>
-                <button @click="Login()">Login</button>
+                <button @click="Login()" :disabled="!enableLogin">Login</button>
         </section>
     </main>
 </template>
@@ -25,7 +25,7 @@ export default {
     name: "login",
     data() {
         return {
-            isLoggedIn: false,
+            enableLogin: true,
             emailInput: "",
             passwordInput: "",
             regex: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
@@ -38,6 +38,7 @@ export default {
                 this.emailInput = "";
                 this.passwordInput = "";
             } else {
+                enableLogin = false;
                 console.log("the email address could not be validated");
             }
 

@@ -1,4 +1,5 @@
-import { Store, GetterTree, ActionTree, MutationTree } from 'vuex';
+import { GetterTree, ActionTree, MutationTree } from 'vuex';
+import Vuex from 'vuex';
 import { post } from '@/src/requests';
 import { get } from '@/src/requests';
 import { User } from '@/src/User';
@@ -7,6 +8,29 @@ export const state = () => ({
     authToken: "",
     stateUser: <User>{},
 });
+
+export const store = new Vuex.Store({
+    state: {
+        authToken: "",
+        stateUser: <User>{},
+    },
+    getters: {
+        getAuthToken(state) {
+            return state.authToken;
+        },
+        getStateUser(state) {
+            return state.stateUser;
+        }
+    },
+    mutations: {
+        setToken(state, token) {
+            state.authToken = token;
+        },
+        setStateUser(state, user){
+            state.stateUser = user;
+        }
+    }
+})
 
 export type RootState = ReturnType<typeof state>;
 
@@ -29,19 +53,18 @@ export const mutations: MutationTree<RootState> = {
 };
 
 export const actions: ActionTree<RootState, RootState> = {
-    async login({ state }, details: { email: string, password: string }) {
+    async login({ state, commit, rootState }, details: { email: string, password: string }) {
         try {
             const res: { accessToken: string } = await post('/login', details)
 
-            //this is not allowed, you have to commit this to a mutation instead
-            //state.authToken = res.accessToken;
+            store.commit('setToken', res.accessToken);
+            store.commit('setStateUser', await get('/users/user'));
             
             this.commit('setToken', res.accessToken);
             this.commit('setStateUser', await get('/users/user'));
 
-            console.log(state.authToken + " " + state.stateUser);
         } catch (e) {
             console.error(e);
         }
-    }
+    },
 };
