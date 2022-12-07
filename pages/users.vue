@@ -30,12 +30,15 @@ export default defineComponent({
         async deleteUser(id: string) {
             if (confirm(`Are you sure you wish to delete user ${id}`)) {
                 const index = this.users.findIndex(u => u.id == id);
+                
                 this.users.splice(index, 1);
                 
-                try {
-                    await del(`/users/${id}`);
-                } catch (e) {
-                    console.error(e);
+                if (!this.users[index].isNew) {
+                    try {
+                        await del(`/users/${id}`);
+                    } catch (e) {
+                        console.error(e);
+                    }
                 }
             }
         },
