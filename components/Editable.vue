@@ -12,7 +12,7 @@ export default defineComponent({
         },
     },
     computed: {
-        listeners(): any {
+        listeners(): Record<string, Function | Function[]> {
             return { ...this.$listeners, input: this.onInput };
         },
     },
