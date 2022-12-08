@@ -28,17 +28,16 @@ export default defineComponent({
             });
         },
         async deleteUser(id: string) {
-            if (confirm(`Are you sure you wish to delete user ${id}`)) {
-                const index = this.users.findIndex(u => u.id == id);
-                
-                this.users.splice(index, 1);
-                
-                if (!this.users[index].isNew) {
-                    try {
-                        await del(`/users/${id}`);
-                    } catch (e) {
-                        console.error(e);
-                    }
+            const index = this.users.findIndex(u => u.id == id);
+            const user = this.users[index];
+
+            this.users.splice(index, 1);
+
+            if (!user.isNew && confirm(`Are you sure you wish to delete user ${id}`)) {
+                try {
+                    await del(`/users/${id}`);
+                } catch (e) {
+                    console.error(e);
                 }
             }
         },
