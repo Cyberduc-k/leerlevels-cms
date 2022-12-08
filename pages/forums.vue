@@ -3,7 +3,7 @@ import Header from "@/components/Header.vue";
 import { Forum } from "@/src/Forum"
 import ForumRow from "@/components/ForumRow.vue"
 import { defineComponent } from "vue"
-import { get } from "@/src/requests";
+import { get, del } from "@/src/requests";
 
 export default defineComponent({
     components: {
@@ -16,6 +16,29 @@ export default defineComponent({
         limit: 10,
     }),
     methods: {
+      AddForum() {
+            this.forums.push({
+                isNew: true,
+                forumId: "N/A",
+                forumTitle: "",
+                description: "",
+            });
+        },
+        async deleteUser(id: string) {
+            if (confirm(`Are you sure you wish to delete forum ${id}`)) {
+                const index = this.forums.findIndex(u => u.forumId == id);
+
+                this.forums.splice(index, 1);
+
+                if (!this.forums[index].isNew) {
+                    try {
+                        await del(`/forums/${id}`);
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
+            }
+        },
         async deleteForum(id: string) {
             if (confirm(`Are you sure you wish to delete forum ${id}`)) {
                 const index = this.forums.findIndex(u => u.forumId == id);
@@ -46,7 +69,7 @@ export default defineComponent({
         <section>
             <header class="pure-g">
                 <h1>Forums</h1>
-                <NuxtLink class="pure-button pure-button-primary button-add" to="CreateForum">Add Forum</NuxtLink>
+                <button class="pure-button pure-button-primary button-add" @click="AddForum">Add Forum</button>
 
             </header>
             <table class="pure-table pure-table-horizontal">
