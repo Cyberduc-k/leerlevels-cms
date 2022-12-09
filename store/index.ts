@@ -43,18 +43,22 @@ export const store = new Vuex.Store({
 });
 
 export const actions: ActionTree<RootState, RootState> = {
-    async login({ }, details: { email: string, password: string }) {
+    async login({ }, details: { email: string, password: string }): Promise<boolean> {
         try {
-            const res: { accessToken: string } = await post('/login', details)
+            const res: { accessToken: string } = await post('/login', details);
 
             store.commit('setToken', res.accessToken);
-            store.commit('setStateUser', await get('/users/user'));
-
             this.commit('setToken', res.accessToken);
-            this.commit('setStateUser', await get('/users/user'));
+            
+            const user: User = await get('/users/user');
+            
+            store.commit('setStateUser', user);
+            this.commit('setStateUser', user);
 
+            return true;
         } catch (e) {
             console.error(e);
+            return false;
         }
     },
 };

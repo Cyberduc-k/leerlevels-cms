@@ -1,6 +1,17 @@
-<script setup lang="ts">
+<script lang="ts">
 import Header from "@/components/Header.vue"
-//import { state } from "@/store/index"
+import { defineComponent } from "vue"
+
+export default defineComponent({
+    components: {
+        Header,
+    },
+    beforeCreate() {
+        if (this.$store.state.authToken === "") {
+            this.$router.replace({ path: "/login", query: { next: "/" } });
+        }
+    },
+});
 </script>
 
 <template>

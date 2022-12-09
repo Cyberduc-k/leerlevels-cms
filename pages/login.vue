@@ -32,13 +32,19 @@ export default {
         }
     },
     methods: {
-        Login(){
-            if(this.checkEmail()) {
-                this.$store.dispatch("login", { email: this.emailInput, password: this.passwordInput });
-                this.emailInput = "";
-                this.passwordInput = "";
+        async Login() {
+            if (this.checkEmail()) {
+                if (await this.$store.dispatch("login", { email: this.emailInput, password: this.passwordInput })) {
+                    this.emailInput = "";
+                    this.passwordInput = "";
+                    
+                    if (this.$route.query.next) {
+                        this.$router.push(this.$route.query.next);
+                    }
+                }
             } else {
-                enableLogin = false;
+                // setting this to false would permanently disable the login button.
+                // enableLogin = false;
                 console.log("the email address could not be validated");
             }
 
