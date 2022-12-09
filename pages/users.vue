@@ -37,12 +37,8 @@ export default defineComponent({
             if (!user.isNew && confirm(`Are you sure you wish to delete user ${id}`)) {
                 try {
                     await del(`/users/${id}`);
-                } catch (e: any) {
-                    if (e.status === 500) {
-                        this.$router.replace({ path: "/login", query: { next: "/users" } });
-                    } else {
-                        console.error(e);
-                    }
+                } catch (e) {
+                    console.error(e);
                 }
             }
         },
@@ -58,8 +54,16 @@ export default defineComponent({
         },
     },
     async fetch() {
-        const paginated = await get(`/users?limit=${this.limit}&page=${this.page}`);
-        this.users = paginated.items;
+        try {
+            const paginated = await get(`/users?limit=${this.limit}&page=${this.page}`);
+            this.users = paginated.items;
+        } catch (e: any) {
+            if (e.status === 401) {
+                this.$router.replace({ path: "/login", query: { next: "/users" } });
+            } else {
+                console.error(e);
+            }
+        }
     },
 });
 </script>

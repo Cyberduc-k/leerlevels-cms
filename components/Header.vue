@@ -1,4 +1,19 @@
-<script setup lang="ts">
+<script lang="ts">
+import { defineComponent } from "vue";
+import { store } from "@/store";
+
+export default defineComponent({
+    methods: {
+        logout() {
+            this.$store.commit('setToken', "");
+            store.commit('setToken', "");
+            this.$store.commit('setStateUser', {});
+            store.commit('setStateUser', {});
+            const route = this.$route.fullPath;
+            this.$router.push({ path: "/login", query: { next: route } });
+        },
+    }
+});
 </script>
 
 <template>
@@ -20,6 +35,9 @@
                         <a class="pure-menu-link" :href="href" @click="navigate">forums</a>
                     </li>
                 </NuxtLink>
+                <li class="pure-menu-item logout">
+                    <button class="pure-button" @click="logout">Logout</button>
+                </li>
             </ul>
         </nav>
     </header>
@@ -30,7 +48,16 @@ header.heading {
     border-bottom: 1px solid hsl(0, 0%, 79.6%);
 }
 
+.pure-menu-list {
+    width: 100%;
+}
+
 .pure-menu-item {
     line-height: 30px;
+}
+
+.logout {
+    float: right;
+    margin: 6px 0;
 }
 </style>
