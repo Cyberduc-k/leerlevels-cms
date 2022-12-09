@@ -68,7 +68,7 @@ export default defineComponent({
 </script>
 
 <template>
-    <tr :class="{ editable }">
+    <tr :class="{ editable, inactive: !user.isActive }">
         <td>{{ user.id }}</td>
         <td><Editable :editable="editable" v-model="email" /></td>
         <td><Editable :editable="editable" v-model="firstName" /></td>
@@ -76,11 +76,14 @@ export default defineComponent({
         <td><Editable :editable="editable" v-model="userName" /></td>
         <td>{{ userRole[role] }}</td>
         <td>
-            <div class="pure-button-group" role="group">
+            <div v-if="user.isActive" class="pure-button-group" role="group">
                 <button v-if="editable" class="pure-button pure-button-primary" @click="save">Save</button>
                 <button v-else class="pure-button pure-button-primary" @click="edit">Edit</button>
-                <button class="pure-button button-delete" @click="$emit('deleteUser', user.id)">Delete</button>
+                <button class="pure-button button-delete" @click="$emit('deleteUser', user.id)">Deactivate</button>
             </div>
+            <!-- <div v-else class="pure-button-group" role="group">
+                <button class="pure-button button-delete" @click="$emit('activateUser', user.id)">Activate</button>
+            </div> -->
         </td>
     </tr>
 </template>
@@ -88,6 +91,11 @@ export default defineComponent({
 <style scoped>
 .pure-button-group {
     float: right;
+}
+
+.inactive {
+    opacity: 0.5;
+    height: 51px;
 }
 
 .pure-button-group button:first-child {

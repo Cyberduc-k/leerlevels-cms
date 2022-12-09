@@ -5,6 +5,7 @@ export interface User {
     lastName: string,
     userName: string,
     role: number,
+    isActive: boolean,
     
     isNew: boolean,
 }

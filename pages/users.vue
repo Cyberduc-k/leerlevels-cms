@@ -24,6 +24,7 @@ export default defineComponent({
                 firstName: "",
                 lastName: "",
                 userName: "",
+                isActive: true,
                 role: UserRole.Student,
             });
         },
@@ -31,7 +32,7 @@ export default defineComponent({
             const index = this.users.findIndex(u => u.id == id);
             const user = this.users[index];
 
-            this.users.splice(index, 1);
+            user.isActive = false;
 
             if (!user.isNew && confirm(`Are you sure you wish to delete user ${id}`)) {
                 try {
