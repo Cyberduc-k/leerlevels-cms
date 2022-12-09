@@ -36,8 +36,12 @@ export default defineComponent({
             if (!user.isNew && confirm(`Are you sure you wish to delete user ${id}`)) {
                 try {
                     await del(`/users/${id}`);
-                } catch (e) {
-                    console.error(e);
+                } catch (e: any) {
+                    if (e.status === 500) {
+                        this.$router.replace({ path: "/login", query: { next: "/users" } });
+                    } else {
+                        console.error(e);
+                    }
                 }
             }
         },
