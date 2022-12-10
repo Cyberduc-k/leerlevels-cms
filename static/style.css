@@ -9,6 +9,7 @@ html, body {
 
 main {
     margin: auto;
+    padding: 0 1em;
     max-width: 1400px;
     min-height: 100vh;
 }
