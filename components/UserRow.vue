@@ -29,6 +29,9 @@ export default defineComponent({
         edit() {
             this.editable = true;
         },
+        disableEdit() {
+            this.editable = false;
+        },
         async save() {
             try {
                 if (this.user.isNew) {
@@ -68,7 +71,7 @@ export default defineComponent({
 </script>
 
 <template>
-    <tr :class="{ editable, inactive: !user.isActive }">
+    <tr :class="{ editable, inactive: !user.isActive }"  @blur="disableEdit"> <!-- this blur doesn't work here because this table row is never actually clicked on, it works in the td elements, but to prevent 'have I edited/saved this or not?' uncertainty & confusion I decided to leave it out here if the tr clickability is ever increased and there is a need for this to be utilized here as well -->
         <td>{{ user.id }}</td>
         <td><Editable :editable="editable" v-model="email" /></td>
         <td><Editable :editable="editable" v-model="firstName" /></td>

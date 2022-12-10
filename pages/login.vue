@@ -3,7 +3,7 @@
         <section class="login-window">
             <img class="LeerLevels-image" src="@/assets/LeerLevels_Logo_Horizontal.svg"/>
             <h1>CMS Management portal login</h1>
-                <form class="pure-form pure-form-stacked" @submit="login">
+                <section class="pure-form pure-form-stacked">
                     <fieldset>
                         <section class="pure-control-group">
                             <label for="stacked-email" class="labelText">Email Address</label>
@@ -14,10 +14,10 @@
                             <input type="password" id="stacked-password" placeholder="Password" required v-model="passwordInput" @input="validate" @keypress.prevent.enter="login"/>
                         </section>
                         <section class="pure-controls">
-                            <input type="submit" class="pure-button pure-button-primary" :disabled="!isValid" value="Login" />
+                            <button class="pure-button pure-button-primary" :disabled="!isValid" @click="login">Login</button>
                         </section>
                     </fieldset>
-                </form>
+                </section>
         </section>
     </main>
 </template>
@@ -32,6 +32,12 @@ export default defineComponent({
             emailInput: "",
             passwordInput: "",
             emailRegex: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
+        }
+    },
+    beforeCreate(){
+        //check if the user is still logged in and redirect to home page
+        if (this.$store.state.authToken !== "") {
+            this.$router.push('/');
         }
     },
     methods: {
@@ -63,15 +69,12 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.body {
-    background-color: gray;
-}
 
 main {
     min-height: calc(100vh - 0.5em);
     max-width: none;
     padding: 0.25em 0.5em 0.25em 0.5em;
-    background-color: gray;
+    background-color: #b9b8b8;
 }
 
 .login-window {
