@@ -3,11 +3,14 @@ html, body {
     margin: 0;
     box-sizing: border-box;
     font-family: sans-serif;
+    width: 100vw;
+    min-height: 100vh;
 }
 
 main {
     margin: auto;
     max-width: 1400px;
+    min-height: 100vh;
 }
 
 section {
