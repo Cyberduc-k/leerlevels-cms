@@ -20,6 +20,9 @@ export default defineComponent({
     <header class="heading">
         <nav class="pure-menu pure-menu-horizontal">
             <ul class="pure-menu-list">
+                <li class="pure-menu-item">
+                    <img class="leerlevels-image" src="@/assets/LeerLevels_Logo_Horizontal.svg"/>
+                </li>
                 <NuxtLink to="/" custom v-slot="{ href, navigate, isExactActive }">
                     <li :class="{ 'pure-menu-item': true, 'pure-menu-selected': isExactActive }">
                         <a class="pure-menu-link" :href="href" @click="navigate">Home</a>
@@ -46,6 +49,11 @@ export default defineComponent({
 <style>
 header.heading {
     border-bottom: 1px solid hsl(0, 0%, 79.6%);
+}
+
+header.heading .leerlevels-image {
+    height: 40px;
+    vertical-align: middle;
 }
 
 .pure-menu-list {
