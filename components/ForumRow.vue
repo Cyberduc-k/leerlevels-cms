@@ -18,8 +18,8 @@ export default defineComponent({
     data() {
         return {
             editable: this.forum.isNew,
-            Title : this.forum.Title,
-            Description: this.forum.Description,
+            Title : this.forum.title,
+            Description: this.forum.description,
         };
     },
     methods: {
@@ -34,9 +34,9 @@ export default defineComponent({
                     Title: this.Title,
                     Description: this.Description,
                     });
-                    this.forum.Id = response.id;
+                    this.forum.id = response.id;
                 } else {
-                    await put(`/forums/${this.forum.Id}`, {
+                    await put(`/forums/${this.forum.id}`, {
                     Title: this.Title,
                     Description: this.Description,
                     });
@@ -54,14 +54,14 @@ export default defineComponent({
 
 <template>
     <tr :class="{ editable }">
-        <td>{{ forum.Id }}</td>
+        <td>{{ forum.id }}</td>
         <td><Editable :editable="editable" v-model="Title" /></td>
         <td><Editable :editable="editable" v-model="Description" /></td>
         <td>
           <div class="pure-button-group" role="group">
                 <button v-if="editable" class="pure-button pure-button-primary" @click="save">Save</button>
                 <button v-else class="pure-button pure-button-primary" @click="edit">Edit</button>
-                <button class="pure-button button-delete" @click="$emit('deleteForum', forum.Id)">Delete</button>
+                <button class="pure-button button-delete" @click="$emit('deleteForum', forum.id)">Delete</button>
             </div>
         </td>
     </tr>

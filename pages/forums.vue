@@ -19,14 +19,14 @@ export default defineComponent({
       AddForum() {
             this.forums.push({
                 isNew: true,
-                Id: "N/A",
-                Title: "",
-                Description: "",
+                id: "N/A",
+                title: "",
+                description: "",
             });
         },
         async deleteUser(id: string) {
             if (confirm(`Are you sure you wish to delete forum ${id}`)) {
-                const index = this.forums.findIndex(u => u.Id == id);
+                const index = this.forums.findIndex(u => u.id == id);
 
                 this.forums.splice(index, 1);
 
@@ -41,7 +41,7 @@ export default defineComponent({
         },
         async deleteForum(id: string) {
             if (confirm(`Are you sure you wish to delete forum ${id}`)) {
-                const index = this.forums.findIndex(u => u.Id == id);
+                const index = this.forums.findIndex(u => u.id == id);
                 this.forums.splice(index, 1);
             }
         },
@@ -87,7 +87,7 @@ export default defineComponent({
                     </tr>
                 </thead>
                 <tbody>
-                    <ForumRow v-for="forum in forums" :key="forum.Id" :forum="forum" @deleteForum="deleteForum"/>
+                    <ForumRow v-for="forum in forums" :key="forum.id" :forum="forum" @deleteForum="deleteForum"/>
                 </tbody>
             </table>
             <div class="pure-button-group pagination" role="group">
