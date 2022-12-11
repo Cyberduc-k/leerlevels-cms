@@ -18,8 +18,8 @@ export default defineComponent({
     data() {
         return {
             editable: this.forum.isNew,
-            title : this.forum.forumTitle,
-            description: this.forum.description,
+            Title : this.forum.Title,
+            Description: this.forum.Description,
         };
     },
     methods: {
@@ -31,14 +31,14 @@ export default defineComponent({
                 if (this.forum.isNew) {
                     this.forum.isNew = false;
                     let response = await post('/forums', {
-                    title: this.title,
-                    description: this.description,
+                    Title: this.Title,
+                    Description: this.Description,
                     });
-                    this.forum.forumId = response.id;
+                    this.forum.Id = response.id;
                 } else {
-                    await put(`/forums/${this.forum.forumId}`, {
-                      title: this.title,
-                    description: this.description,
+                    await put(`/forums/${this.forum.Id}`, {
+                    Title: this.Title,
+                    Description: this.Description,
                     });
                 }
             } catch (e) {
@@ -54,14 +54,14 @@ export default defineComponent({
 
 <template>
     <tr :class="{ editable }">
-        <td>{{ forum.forumId }}</td>
-        <td><Editable :editable="editable" v-model="forum.forumTitle" /></td>
-        <td><Editable :editable="editable" v-model="forum.description" /></td>
+        <td>{{ forum.Id }}</td>
+        <td><Editable :editable="editable" v-model="Title" /></td>
+        <td><Editable :editable="editable" v-model="Description" /></td>
         <td>
           <div class="pure-button-group" role="group">
                 <button v-if="editable" class="pure-button pure-button-primary" @click="save">Save</button>
                 <button v-else class="pure-button pure-button-primary" @click="edit">Edit</button>
-                <button class="pure-button button-delete" @click="$emit('deleteForum', forum.forumId)">Delete</button>
+                <button class="pure-button button-delete" @click="$emit('deleteForum', forum.Id)">Delete</button>
             </div>
         </td>
     </tr>

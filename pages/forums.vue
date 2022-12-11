@@ -19,14 +19,14 @@ export default defineComponent({
       AddForum() {
             this.forums.push({
                 isNew: true,
-                forumId: "N/A",
-                forumTitle: "",
-                description: "",
+                Id: "N/A",
+                Title: "",
+                Description: "",
             });
         },
         async deleteUser(id: string) {
             if (confirm(`Are you sure you wish to delete forum ${id}`)) {
-                const index = this.forums.findIndex(u => u.forumId == id);
+                const index = this.forums.findIndex(u => u.Id == id);
 
                 this.forums.splice(index, 1);
 
@@ -41,7 +41,7 @@ export default defineComponent({
         },
         async deleteForum(id: string) {
             if (confirm(`Are you sure you wish to delete forum ${id}`)) {
-                const index = this.forums.findIndex(u => u.forumId == id);
+                const index = this.forums.findIndex(u => u.Id == id);
                 this.forums.splice(index, 1);
             }
         },
@@ -57,8 +57,13 @@ export default defineComponent({
         },
     },
     async fetch() {
+        try {
         const paginated = await get(`/forums?limit=${this.limit}&page=${this.page}`);
-        this.forums = paginated.items;
+        const result = await get(`/forums`);
+        this.forums = result;
+        } catch (e: any) {
+        console.error(e);
+        }
     },
 });
 </script>
@@ -75,14 +80,14 @@ export default defineComponent({
             <table class="pure-table pure-table-horizontal">
                 <thead>
                     <tr>
-                        <th>forumId</th>
-                        <th>forum Title</th>
-                        <th>description</th>
+                        <th>Id</th>
+                        <th>Title</th>
+                        <th>Description</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <ForumRow v-for="forum in forums" :key="forum.forumId" :forum="forum" @deleteForum="deleteForum"/>
+                    <ForumRow v-for="forum in forums" :key="forum.Id" :forum="forum" @deleteForum="deleteForum"/>
                 </tbody>
             </table>
             <div class="pure-button-group pagination" role="group">

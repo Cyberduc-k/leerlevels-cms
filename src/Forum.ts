@@ -1,6 +1,6 @@
 export interface Forum {
-    forumId: string,
-    forumTitle: string,
-    description: string,
+    Id: string,
+    Title: string,
+    Description: string,
     isNew: boolean,
 }
