@@ -2,8 +2,8 @@
     <main>
         <section class="login-window">
             <img class="LeerLevels-image" src="@/assets/LeerLevels_Logo_Horizontal.svg"/>
-            <h1>CMS Management portal login</h1>
-                <section class="pure-form pure-form-stacked">
+            <h1>CMS Management Portal Login</h1>
+                <form class="pure-form pure-form-stacked" @submit="loginSubmit">
                     <fieldset>
                         <section class="pure-control-group">
                             <label for="stacked-email" class="labelText">Email Address</label>
@@ -13,22 +13,26 @@
                             <label for="stacked-password" class="labelText">Password</label>
                             <input type="password" id="stacked-password" placeholder="Password" required v-model="passwordInput" @input="validate" @keypress.prevent.enter="login"/>
                         </section>
+                        <section  class="pure-control-group">
+                            <label type="text" class="labelText" id="errorLabel" v-show="loginError">Invalid username or password entered!</label>
+                        </section>
                         <section class="pure-controls">
-                            <button class="pure-button pure-button-primary" :disabled="!isValid" @click="login">Login</button>
+                            <input type="submit" class="pure-button pure-button-primary" :disabled="!isValid" value="login" />
                         </section>
                     </fieldset>
-                </section>
-        </section>
+                </form>
+            </section>
     </main>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from "vue"
 
 export default defineComponent({
     data() {
         return {
             isValid: false,
+            loginError: false,
             emailInput: "",
             passwordInput: "",
             emailRegex: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
@@ -44,6 +48,11 @@ export default defineComponent({
         validate() {
             this.isValid = this.checkEmail() && this.passwordInput !== "";
         },
+        loginSubmit() :boolean {
+            event?.preventDefault();
+            this.login();
+            return false;
+        },
         async login() {
             if (this.checkEmail()) {
                 if (await this.$store.dispatch("login", { email: this.emailInput, password: this.passwordInput })) {
@@ -51,10 +60,13 @@ export default defineComponent({
                     this.passwordInput = "";
                     
                     if (this.$route.query.next) {
-                        this.$router.push(this.$route.query.next);
+                        this.$router.push(this.$route.query.next as string);
                     } else {
                         this.$router.push("/");
                     }
+                    this.loginError = false;
+                } else {
+                    this.loginError = true;
                 }
             } else {
                 console.log("the email address could not be validated");
@@ -105,5 +117,9 @@ h1 {
 
 #stacked-email, #stacked-password {
     width: 57%;
+}
+
+#errorLabel {
+    color: #930808;
 }
 </style>
