@@ -56,7 +56,7 @@ export default defineComponent({
     async fetch() {
         try {
             const paginated = await get(`/users?limit=${this.limit}&page=${this.page}`);
-            this.users = paginated.items;
+            this.users = paginated.data.items;
         } catch (e: any) {
             if (e.status === 401) {
                 this.$router.replace({ path: "/login", query: { next: "/users" } });

@@ -1,12 +1,17 @@
 import { GetterTree, ActionTree, MutationTree } from 'vuex';
-import Vuex from 'vuex';
+import { setToken } from '@/src/axios';
 import { post } from '@/src/requests';
 import { get } from '@/src/requests';
 import { User } from '@/src/User';
+import { AxiosResponse } from 'axios';
 
 export const state = () => {
     const authToken = sessionStorage.getItem("authToken") ?? "";
     const stateUser = JSON.parse(sessionStorage.getItem("stateUser") ?? "{}");
+
+    if (authToken) {
+        setToken(authToken);
+    }
 
     return {
         authToken,
@@ -29,6 +34,7 @@ export const mutations: MutationTree<RootState> = {
     setToken(state, token) {
         state.authToken = token;
         sessionStorage.setItem("authToken", token);
+        setToken(token);
     },
     setStateUser(state, user) {
         state.stateUser = user;
@@ -36,25 +42,13 @@ export const mutations: MutationTree<RootState> = {
     }
 };
 
-export const store = new Vuex.Store({
-    state: state(),
-    getters: { ...getters },
-    mutations: { ...mutations }
-});
-
 export const actions: ActionTree<RootState, RootState> = {
     async login({ }, details: { email: string, password: string }): Promise<boolean> {
         try {
-            const res: { accessToken: string } = await post('/login', details);
-
-            store.commit('setToken', res.accessToken);
-            this.commit('setToken', res.accessToken);
-            
-            const user: User = await get('/users/user');
-            
-            store.commit('setStateUser', user);
-            this.commit('setStateUser', user);
-
+            const res: AxiosResponse<{ accessToken: string }> = await post('/login', details);
+            this.commit('setToken', res.data.accessToken);
+            const user: AxiosResponse<User> = await get('/users/user');
+            this.commit('setStateUser', user.data);
             return true;
         } catch (e) {
             console.error(e);

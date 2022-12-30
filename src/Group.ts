@@ -1,17 +1,13 @@
-import { Set } from "./Set";
-import { User } from "./User";
-
 export interface Group {
-    Id:string,
-    Name: string,
-    Subject: string,
-    EducationType: number,
-    SchoolYear: number,
-    User: User[]
-    Set: Set[] 
+    id: string,
+    name: string,
+    subject: string,
+    educationType: EducationType,
+    schoolYear: SchoolYear,
+    isNew: boolean,
 }
 
-export enum EducationType{
+export enum EducationType {
     Havo,
     Mavo,
     Mbo,
@@ -24,7 +20,7 @@ export enum EducationType{
     Overig,
 }
 
-export enum SchoolYear{
+export enum SchoolYear {
     One,
     Two,
     Three,

@@ -58,11 +58,11 @@ export default defineComponent({
     },
     async fetch() {
         try {
-        const paginated = await get(`/forums?limit=${this.limit}&page=${this.page}`);
-        const result = await get(`/forums`);
-        this.forums = result;
+            // const paginated = await get(`/forums?limit=${this.limit}&page=${this.page}`);
+            const result = await get(`/forums`);
+            this.forums = result.data;
         } catch (e: any) {
-        console.error(e);
+            console.error(e);
         }
     },
 });

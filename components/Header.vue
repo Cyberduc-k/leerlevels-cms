@@ -1,14 +1,11 @@
 <script lang="ts">
 import { defineComponent } from "vue";
-import { store } from "@/store";
 
 export default defineComponent({
     methods: {
         logout() {
             this.$store.commit('setToken', "");
-            store.commit('setToken', "");
             this.$store.commit('setStateUser', {});
-            store.commit('setStateUser', {});
             const route = this.$route.fullPath;
             this.$router.push({ path: "/login", query: { next: route } });
         },

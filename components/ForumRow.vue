@@ -18,8 +18,8 @@ export default defineComponent({
     data() {
         return {
             editable: this.forum.isNew,
-            Title : this.forum.title,
-            Description: this.forum.description,
+            title : this.forum.title,
+            description: this.forum.description,
         };
     },
     methods: {
@@ -31,14 +31,14 @@ export default defineComponent({
                 if (this.forum.isNew) {
                     this.forum.isNew = false;
                     let response = await post('/forums', {
-                    Title: this.Title,
-                    Description: this.Description,
+                        title: this.title,
+                        description: this.description,
                     });
-                    this.forum.id = response.id;
+                    this.forum.id = response.data.id;
                 } else {
                     await put(`/forums/${this.forum.id}`, {
-                    Title: this.Title,
-                    Description: this.Description,
+                    Title: this.title,
+                    Description: this.description,
                     });
                 }
             } catch (e) {
@@ -55,8 +55,8 @@ export default defineComponent({
 <template>
     <tr :class="{ editable }">
         <td>{{ forum.id }}</td>
-        <td><Editable :editable="editable" v-model="Title" /></td>
-        <td><Editable :editable="editable" v-model="Description" /></td>
+        <td><Editable :editable="editable" v-model="title" /></td>
+        <td><Editable :editable="editable" v-model="description" /></td>
         <td>
           <div class="pure-button-group" role="group">
                 <button v-if="editable" class="pure-button pure-button-primary" @click="save">Save</button>

@@ -48,7 +48,7 @@ export default defineComponent({
                             password,
                         });
                 
-                        this.user.id = response.id;
+                        this.user.id = response.data.id;
                     }
                 } else {
                     await put(`/users/${this.user.id}`, {
