@@ -27,6 +27,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
+import { UserRole } from "@/src/User"
 
 export default defineComponent({
     data() {
@@ -59,7 +60,7 @@ export default defineComponent({
                     this.emailInput = "";
                     this.passwordInput = "";
                     
-                    if (this.$route.query.next) {
+                    if (this.$route.query.next /*&& this.$store.state.userRole == UserRole.Admin*/) {
                         this.$router.push(this.$route.query.next as string);
                     } else {
                         this.$router.push("/");

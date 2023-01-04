@@ -3,7 +3,7 @@ import Header from "@/components/Header.vue";
 import UserRow from "@/components/UserRow.vue";
 import { defineComponent } from "vue"
 import { User, UserRole } from "@/src/User";
-import { get, del } from "@/src/requests";
+import { get, put, del } from "@/src/requests";
 
 export default defineComponent({
     components: {
@@ -28,15 +28,41 @@ export default defineComponent({
                 role: UserRole.Student,
             });
         },
+        async activateUser(id: string) {
+            const index = this.users.findIndex(u => u.id == id);
+            const user = this.users[index];
+
+            if(!user.isNew && confirm(`Are you sure you wish to re-enable user ${id}?`)) {
+                try {
+                    /*await put(`/users/${id}`, {
+                        isActive: user.isActive
+                    });*/
+                    //user.isActive = true;
+
+                    const res = await put(`/users/${id}`, {
+                        isActive: true
+                    }).then( (res) => { return JSON.parse(res.data)});
+                    user.isActive = res.isActive;
+
+
+                }
+                catch (e) {
+                    console.error(e);
+                }
+            }
+        },
         async deleteUser(id: string) {
             const index = this.users.findIndex(u => u.id == id);
             const user = this.users[index];
 
-            user.isActive = false;
+            if(user.isNew && this.users != undefined) {
+                this.users.pop();
+            }
 
-            if (!user.isNew && confirm(`Are you sure you wish to delete user ${id}`)) {
+            if (!user.isNew && confirm(`Are you sure you wish to delete user ${id}?`)) {
                 try {
                     await del(`/users/${id}`);
+                    user.isActive = false;
                 } catch (e) {
                     console.error(e);
                 }
@@ -55,8 +81,8 @@ export default defineComponent({
     },
     async fetch() {
         try {
-            const paginated = await get(`/users?limit=${this.limit}&page=${this.page}`);
-            this.users = paginated.data.items;
+            const paginated = await get(`/users?limit=${this.limit}&page=${this.page}`).then( (paginated) => { return JSON.parse(paginated.data)});
+            this.users = paginated.items;
         } catch (e: any) {
             if (e.status === 401) {
                 this.$router.replace({ path: "/login", query: { next: "/users" } });
@@ -80,7 +106,7 @@ export default defineComponent({
             <table class="pure-table pure-table-horizontal">
                 <thead>
                     <tr>
-                        <th>Id</th>
+                        <th id="id-column">Id</th>
                         <th>Email</th>
                         <th>First Name</th>
                         <th>Last Name</th>
@@ -90,7 +116,7 @@ export default defineComponent({
                     </tr>
                 </thead>
                 <tbody>
-                    <UserRow v-for="user in users" :key="user.id" :user="user" @deleteUser="deleteUser"/>
+                    <UserRow v-for="user in users" :key="user.id" :user="user" @activateUser="activateUser" @deleteUser="deleteUser"/>
                 </tbody>
             </table>
             <div class="pure-button-group pagination" role="group">
@@ -109,6 +135,10 @@ table {
 
 h1 {
     display: inline-block;
+}
+
+#id-column {
+    width: 150px;
 }
 
 .button-add {

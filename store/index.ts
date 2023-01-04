@@ -7,6 +7,7 @@ import { AxiosResponse } from 'axios';
 
 export const state = () => {
     const authToken = sessionStorage.getItem("authToken") ?? "";
+    const refreshToken = sessionStorage.getItem("refreshToken") ?? "";
     const stateUser = JSON.parse(sessionStorage.getItem("stateUser") ?? "{}");
 
     if (authToken) {
@@ -15,6 +16,7 @@ export const state = () => {
 
     return {
         authToken,
+        refreshToken,
         stateUser: <User>stateUser,
     };
 };
@@ -24,6 +26,9 @@ export type RootState = ReturnType<typeof state>;
 export const getters: GetterTree<RootState, RootState> = {
     getAuthToken(state) {
         return state.authToken;
+    },
+    getRefreshToken(state) {
+        return state.refreshToken;
     },
     getStateUser(state) {
         return state.stateUser;
@@ -36,6 +41,10 @@ export const mutations: MutationTree<RootState> = {
         sessionStorage.setItem("authToken", token);
         setToken(token);
     },
+    setRefreshToken(state, refreshToken) {
+        state.refreshToken = refreshToken;
+        sessionStorage.setItem("refreshToken", refreshToken);
+    },
     setStateUser(state, user) {
         state.stateUser = user;
         sessionStorage.setItem("stateUser", JSON.stringify(user));
@@ -45,10 +54,16 @@ export const mutations: MutationTree<RootState> = {
 export const actions: ActionTree<RootState, RootState> = {
     async login({ }, details: { email: string, password: string }): Promise<boolean> {
         try {
-            const res: AxiosResponse<{ accessToken: string }> = await post('/login', details);
-            this.commit('setToken', res.data.accessToken);
-            const user: AxiosResponse<User> = await get('/users/user');
-            this.commit('setStateUser', user.data);
+            //const res: AxiosResponse<{ accessToken: string }> = await post('/login', details);
+            //const res: AxiosResponse<{accessToken: string}> = await post('/login', details).then( (response) => { return res;});
+            const res = await post('/login', details).then( (res) => { return JSON.parse(res.data)});
+            this.commit('setToken', res.accessToken);
+
+            this.commit('setRefreshToken', res.initRefreshToken);
+
+            //const user: AxiosResponse<User> = await get('/users/user');
+            const user = await get('/users/user').then( (user) => { return JSON.parse(user.data)});
+            this.commit('setStateUser', user);
             return true;
         } catch (e) {
             console.error(e);

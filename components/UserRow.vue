@@ -29,8 +29,11 @@ export default defineComponent({
         edit() {
             this.editable = true;
         },
-        disableEdit() {
+        disableEdit(id: string, isNew: boolean) {
             this.editable = false;
+            if(isNew) {
+                this.$emit('deleteUser', id);
+            }
         },
         async save() {
             try {
@@ -66,12 +69,12 @@ export default defineComponent({
             }
         }
     },
-    emits: ['deleteUser'],
+    emits: ['activateUser', 'deleteUser'],
 })
 </script>
 
 <template>
-    <tr :class="{ editable, inactive: !user.isActive }"  @blur="disableEdit"> <!-- this blur doesn't work here because this table row is never actually clicked on, it works in the td elements, but to prevent 'have I edited/saved this or not?' uncertainty & confusion I decided to leave it out here if the tr clickability is ever increased and there is a need for this to be utilized here as well -->
+    <tr :class="{ editable, inactive: !user.isActive }"  @blur="disableEdit(user.id, user.isNew)"> <!-- this blur doesn't work here because this table row is never actually clicked on, it works in the td elements, but to prevent 'have I edited/saved this or not?' uncertainty & confusion I decided to leave it out here if the tr clickability is ever increased and there is a need for this to be utilized here as well -->
         <td>{{ user.id }}</td>
         <td><Editable :editable="editable" v-model="email" /></td>
         <td><Editable :editable="editable" v-model="firstName" /></td>
@@ -80,20 +83,33 @@ export default defineComponent({
         <td>{{ userRole[role] }}</td>
         <td>
             <div v-if="user.isActive" class="pure-button-group" role="group">
+                <button v-if="editable" class="pure-button button-delete" @click="disableEdit(user.id, user.isNew)">Close</button>
                 <button v-if="editable" class="pure-button pure-button-primary" @click="save">Save</button>
                 <button v-else class="pure-button pure-button-primary" @click="edit">Edit</button>
-                <button class="pure-button button-delete" @click="$emit('deleteUser', user.id)">Deactivate</button>
+                <button v-if="!user.isNew" class="pure-button button-delete" @click="$emit('deleteUser', user.id)">Deactivate</button>
             </div>
-            <!-- <div v-else class="pure-button-group" role="group">
-                <button class="pure-button button-delete" @click="$emit('activateUser', user.id)">Activate</button>
-            </div> -->
+            <div v-else class="pure-button-group reactivate-button" role="group">
+                <button class="pure-button button-delete" id="activatebutton" @click="$emit('activateUser', user.id)">Activate</button>
+            </div>
         </td>
     </tr>
 </template>
 
 <style scoped>
+
+.editable span[contenteditable] {
+    max-width: 160px;
+}
 .pure-button-group {
     float: right;
+}
+
+#activatebutton {
+    width: 77px;
+}
+
+.reactivate-button {
+    margin-left: -33px;
 }
 
 .inactive {

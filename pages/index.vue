@@ -8,7 +8,8 @@ export default defineComponent({
     },
     beforeCreate() {
         if (this.$store.state.authToken === "") {
-            this.$router.replace({ path: "/login", query: { next: "/" } });
+            //this.$router.replace({ path: "/login", query: { next: "/" } });
+            this.$router.push('/login');
         }
     },
 });
