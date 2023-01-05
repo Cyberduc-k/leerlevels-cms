@@ -25,17 +25,19 @@ export default defineComponent({
             });
         },
         async deleteForum(id: string) {
-            if (confirm(`Are you sure you want to delete forum ${id}?`)) {
                 const index = this.forums.findIndex(u => u.id == id);
                 const forum = this.forums[index];
                 //this.forums.splice(index, 1);
 
-                if (!forum.isNew && confirm(`Are you sure you want to delete forum ${id}?`)) {
-                    try {
-                        await del(`/forums/${id}`);
-                    } catch (e) {
-                        console.error(e);
-                    }
+            if(forum.isNew && this.forums != undefined) {
+                this.forums.pop();
+            }
+
+            if (!forum.isNew && confirm(`Are you sure you want to delete forum ${id}?`)) {
+                try {
+                    await del(`/forums/${id}`);
+                } catch (e) {
+                    console.error(e);
                 }
             }
         },

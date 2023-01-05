@@ -29,8 +29,9 @@ export default defineComponent({
         edit() {
             this.editable = true;
         },
-        disableEdit(id: string, isNew: boolean) {
+        disableEdit(id: string, isNew: boolean, role: number) {
             this.editable = false;
+            this.userRole[this.role] = this.userRole[role];
             if(isNew) {
                 this.$emit('deleteUser', id);
             } else {
@@ -68,11 +69,17 @@ export default defineComponent({
                         userName: this.userName,
                         role: this.role,
                     });
+                    /*this.disableEdit(this.user.id, this.user.isNew, this.user.role);
+                    this.role = this.user.role;
+                    this.userRole[this.role] = this.userRole[this.user.role];*/
+
                 }
             } catch (e) {
                 console.error(e);
             } finally {
                 this.editable = false;
+                this.user.role = this.role;
+                this.userRole[this.user.role] = this.userRole[this.role];
             }
         }
     },
@@ -81,16 +88,26 @@ export default defineComponent({
 </script>
 
 <template>
-    <tr :class="{ editable, inactive: !user.isActive }"  @blur="disableEdit(user.id, user.isNew)"> <!-- this blur doesn't work here because this table row is never actually clicked on, it works in the td elements, but to prevent 'have I edited/saved this or not?' uncertainty & confusion I decided to leave it out here if the tr clickability is ever increased and there is a need for this to be utilized here as well -->
+    <tr :class="{ editable, inactive: !user.isActive }"  @blur="disableEdit(user.id, user.isNew, user.role)"> <!-- this blur doesn't work here because this table row is never actually clicked on, it works in the td elements, but to prevent 'have I edited/saved this or not?' uncertainty & confusion I decided to leave it out here if the tr clickability is ever increased and there is a need for this to be utilized here as well -->
         <td>{{ user.id }}</td>
         <td class="email-editable"><Editable :editable="editable" v-model="email" /></td>
         <td class="editable-class"><Editable :editable="editable" v-model="firstName" /></td>
         <td class="editable-class"><Editable :editable="editable" v-model="lastName" /></td>
         <td class="editable-class"><Editable :editable="editable" v-model="userName" /></td>
-        <td>{{ userRole[role] }}</td>
+        <td>
+            <select v-if="editable" v-model="role">
+                <!--<option value="none" selected disabled>{{ userRole[role] }}</option> -->
+                <option selected disabled>currently: {{ userRole[role] }}</option>
+                <option>{{ userRole[0] }}</option>
+                <option>{{ userRole[1] }}</option>
+                <option>{{ userRole[2] }}</option> 
+            </select>
+            <label v-if="!editable">{{ userRole[role] }}</label>
+        </td>
+        <!--<td>{{ userRole[role] }}<EnumEditable :editable="editable" v-model="role" /></td> -->
         <td>
             <div v-if="user.isActive" class="pure-button-group" role="group">
-                <button v-if="editable" class="pure-button button-delete" @click="disableEdit(user.id, user.isNew)">Close</button>
+                <button v-if="editable" class="pure-button button-delete" @click="disableEdit(user.id, user.isNew, user.role)">Close</button>
                 <button v-if="editable" class="pure-button pure-button-primary" @click="save">Save</button>
                 <button v-else class="pure-button pure-button-primary" @click="edit">Edit</button>
                 <button v-if="!user.isNew" class="pure-button button-delete" @click="$emit('deleteUser', user.id)">Deactivate</button>

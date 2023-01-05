@@ -7,7 +7,7 @@ export default defineComponent({
             this.$store.commit('setToken', "");
             this.$store.commit('setStateUser', {});
             const route = this.$route.fullPath;
-            this.$router.push({ path: "/login", query: { next: route } });
+            this.$router.push({ path: "/login"/*, query: { next: route }*/ });
         },
     }
 });
@@ -32,7 +32,12 @@ export default defineComponent({
                 </NuxtLink>
                 <NuxtLink to="/forums" custom v-slot="{ href, navigate, isActive }">
                     <li :class="{ 'pure-menu-item': true, 'pure-menu-selected': isActive }">
-                        <a class="pure-menu-link" :href="href" @click="navigate">forums</a>
+                        <a class="pure-menu-link" :href="href" @click="navigate">Forums</a>
+                    </li>
+                </NuxtLink>
+                <NuxtLink to="/groups" custom v-slot="{ href, navigate, isActive }">
+                    <li :class="{ 'pure-menu-item': true, 'pure-menu-selected': isActive }">
+                        <a class="pure-menu-link" :href="href" @click="navigate">Groups</a>
                     </li>
                 </NuxtLink>
                 <li class="pure-menu-item logout">

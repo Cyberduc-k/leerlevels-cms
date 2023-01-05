@@ -26,8 +26,11 @@ export default defineComponent({
         edit() {
             this.editable = true;
         },
-        disableEdit() {
+        disableEdit(id: string, isNew: boolean) {
             this.editable = false;
+            if(isNew) {
+                this.$emit('deleteForum', id);
+            }
         },
         async save() {
             try {
@@ -67,7 +70,7 @@ export default defineComponent({
         <td><Editable :editable="editable" v-model="description" /></td>
         <td>
           <div class="pure-button-group" role="group">
-                <button v-if="editable" class="pure-button button-delete" @click="disableEdit()">Close</button>
+                <button v-if="editable" class="pure-button button-delete" @click="disableEdit(forum.id, forum.isNew)">Close</button>
                 <button v-if="editable" class="pure-button pure-button-primary" @click="save">Save</button>
                 <button v-else class="pure-button pure-button-primary" @click="edit">Edit</button>
                 <button class="pure-button button-delete" @click="$emit('deleteForum', forum.id)">Delete</button>

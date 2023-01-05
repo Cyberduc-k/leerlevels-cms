@@ -3,7 +3,6 @@ import { setToken } from '@/src/axios';
 import { post } from '@/src/requests';
 import { get } from '@/src/requests';
 import { User } from '@/src/User';
-import { AxiosResponse } from 'axios';
 
 export const state = () => {
     const authToken = sessionStorage.getItem("authToken") ?? "";
@@ -72,12 +71,15 @@ export const mutations: MutationTree<RootState> = {
 export const actions: ActionTree<RootState, RootState> = {
     async login({ }, details: { email: string, password: string }): Promise<boolean> {
         try {
+            //const res: AxiosResponse<{ accessToken: string }> = await post('/login', details);
+            //const res: AxiosResponse<{accessToken: string}> = await post('/login', details).then( (response) => { return res;});
             const res = await post('/login', details).then( (res) => { return JSON.parse(res.data)});
             this.commit('setToken', res.accessToken);
             this.commit('setAuthTokenExpiresAt', res.accessTokenExpiresAt);
             this.commit('setRefreshToken', res.initRefreshToken);
             this.commit('setRefreshTokenExpiresAt', res.initRefreshTokenExpiresAt);
 
+            //const user: AxiosResponse<User> = await get('/users/user');
             const user = await get('/users/user').then( (user) => { return JSON.parse(user.data)});
             this.commit('setStateUser', user);
 
