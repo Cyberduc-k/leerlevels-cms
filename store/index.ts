@@ -7,7 +7,9 @@ import { AxiosResponse } from 'axios';
 
 export const state = () => {
     const authToken = sessionStorage.getItem("authToken") ?? "";
+    const authTokenExpiresAt = sessionStorage.getItem("authTokenExpiresAt") ?? "";
     const refreshToken = sessionStorage.getItem("refreshToken") ?? "";
+    const refreshTokenExpiresAt = sessionStorage.getItem("refreshTokenExpiresAt") ?? "";
     const stateUser = JSON.parse(sessionStorage.getItem("stateUser") ?? "{}");
 
     if (authToken) {
@@ -16,7 +18,9 @@ export const state = () => {
 
     return {
         authToken,
+        authTokenExpiresAt,
         refreshToken,
+        refreshTokenExpiresAt,
         stateUser: <User>stateUser,
     };
 };
@@ -27,8 +31,14 @@ export const getters: GetterTree<RootState, RootState> = {
     getAuthToken(state) {
         return state.authToken;
     },
+    getAuthTokenExpiresAt(state) {
+        return state.authTokenExpiresAt;
+    },
     getRefreshToken(state) {
         return state.refreshToken;
+    },
+    getRefreshTokenExpiresAt(state) {
+        return state.refreshTokenExpiresAt;
     },
     getStateUser(state) {
         return state.stateUser;
@@ -41,9 +51,17 @@ export const mutations: MutationTree<RootState> = {
         sessionStorage.setItem("authToken", token);
         setToken(token);
     },
+    setAuthTokenExpiresAt(state, authTokenExpiresAt) {
+        state.authTokenExpiresAt = authTokenExpiresAt;
+        sessionStorage.setItem("authTokenExpiresAt", authTokenExpiresAt);
+    },
     setRefreshToken(state, refreshToken) {
         state.refreshToken = refreshToken;
         sessionStorage.setItem("refreshToken", refreshToken);
+    },
+    setRefreshTokenExpiresAt(state, refreshTokenExpiresAt) {
+        state.refreshTokenExpiresAt = refreshTokenExpiresAt;
+        sessionStorage.setItem("refreshTokenExpiresAt", refreshTokenExpiresAt);
     },
     setStateUser(state, user) {
         state.stateUser = user;
@@ -54,16 +72,15 @@ export const mutations: MutationTree<RootState> = {
 export const actions: ActionTree<RootState, RootState> = {
     async login({ }, details: { email: string, password: string }): Promise<boolean> {
         try {
-            //const res: AxiosResponse<{ accessToken: string }> = await post('/login', details);
-            //const res: AxiosResponse<{accessToken: string}> = await post('/login', details).then( (response) => { return res;});
             const res = await post('/login', details).then( (res) => { return JSON.parse(res.data)});
             this.commit('setToken', res.accessToken);
-
+            this.commit('setAuthTokenExpiresAt', res.accessTokenExpiresAt);
             this.commit('setRefreshToken', res.initRefreshToken);
+            this.commit('setRefreshTokenExpiresAt', res.initRefreshTokenExpiresAt);
 
-            //const user: AxiosResponse<User> = await get('/users/user');
             const user = await get('/users/user').then( (user) => { return JSON.parse(user.data)});
             this.commit('setStateUser', user);
+
             return true;
         } catch (e) {
             console.error(e);
