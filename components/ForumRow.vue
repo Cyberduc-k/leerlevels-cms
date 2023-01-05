@@ -26,15 +26,23 @@ export default defineComponent({
         edit() {
             this.editable = true;
         },
+        disableEdit() {
+            this.editable = false;
+        },
         async save() {
             try {
                 if (this.forum.isNew) {
                     this.forum.isNew = false;
+
                     let response = await post('/forums', {
                         title: this.title,
                         description: this.description,
-                    });
-                    this.forum.id = response.data.id;
+                    }).then( (response) => { return JSON.parse(response.data)});
+
+                    this.forum.id = response.id;
+                    this.forum.title = response.title;
+                    this.forum.description = response.description;
+
                 } else {
                     await put(`/forums/${this.forum.id}`, {
                     Title: this.title,
@@ -59,6 +67,7 @@ export default defineComponent({
         <td><Editable :editable="editable" v-model="description" /></td>
         <td>
           <div class="pure-button-group" role="group">
+                <button v-if="editable" class="pure-button button-delete" @click="disableEdit()">Close</button>
                 <button v-if="editable" class="pure-button pure-button-primary" @click="save">Save</button>
                 <button v-else class="pure-button pure-button-primary" @click="edit">Edit</button>
                 <button class="pure-button button-delete" @click="$emit('deleteForum', forum.id)">Delete</button>

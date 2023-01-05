@@ -11,9 +11,9 @@ export default defineComponent({
         ForumRow,
     },
     data: () => ({
-        forums: [] as Forum[],
+        forums: [] as Forum[]/*,
         page: 0,
-        limit: 10,
+        limit: 10,*/
     }),
     methods: {
       AddForum() {
@@ -24,13 +24,13 @@ export default defineComponent({
                 description: "",
             });
         },
-        async deleteUser(id: string) {
-            if (confirm(`Are you sure you wish to delete forum ${id}`)) {
+        async deleteForum(id: string) {
+            if (confirm(`Are you sure you want to delete forum ${id}?`)) {
                 const index = this.forums.findIndex(u => u.id == id);
+                const forum = this.forums[index];
+                //this.forums.splice(index, 1);
 
-                this.forums.splice(index, 1);
-
-                if (!this.forums[index].isNew) {
+                if (!forum.isNew && confirm(`Are you sure you want to delete forum ${id}?`)) {
                     try {
                         await del(`/forums/${id}`);
                     } catch (e) {
@@ -39,8 +39,8 @@ export default defineComponent({
                 }
             }
         },
-        async deleteForum(id: string) {
-            if (confirm(`Are you sure you wish to delete forum ${id}`)) {
+        /*async deleteForum(id: string) {
+            if (confirm(`Are you sure you wish to delete forum ${id}?`)) {
                 const index = this.forums.findIndex(u => u.id == id);
                 this.forums.splice(index, 1);
             }
@@ -54,13 +54,13 @@ export default defineComponent({
         nextPage() {
             this.page++;
             this.$fetch();
-        },
+        },*/
     },
     async fetch() {
         try {
             // const paginated = await get(`/forums?limit=${this.limit}&page=${this.page}`);
-            const result = await get(`/forums`);
-            this.forums = result.data;
+            const result = await get(`/forums`).then( (result) => { return JSON.parse(result.data)});
+            this.forums = result;
         } catch (e: any) {
             console.error(e);
         }
@@ -90,11 +90,11 @@ export default defineComponent({
                     <ForumRow v-for="forum in forums" :key="forum.id" :forum="forum" @deleteForum="deleteForum"/>
                 </tbody>
             </table>
-            <div class="pure-button-group pagination" role="group">
+            <!-- <div class="pure-button-group pagination" role="group">
                 <button class="pure-button" @click="prevPage" :disabled="page == 0">Previous</button>
                 <a class="pure-button">Page {{ page + 1 }}</a>
                 <button class="pure-button" @click="nextPage" :disabled="forums.length < limit">Next</button>
-            </div>
+            </div> -->
         </section>
     </main>
 </template>

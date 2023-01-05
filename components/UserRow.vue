@@ -33,6 +33,8 @@ export default defineComponent({
             this.editable = false;
             if(isNew) {
                 this.$emit('deleteUser', id);
+            } else {
+                this.$emit('fetch');
             }
         },
         async save() {
@@ -49,9 +51,14 @@ export default defineComponent({
                             userName: this.userName,
                             role: this.role,
                             password,
-                        });
+                        }).then( (response) => { return JSON.parse(response.data)});
                 
-                        this.user.id = response.data.id;
+                        this.user.id = response.id;
+                        this.user.email = response.email;
+                        this.user.firstName = response.firstName;
+                        this.user.lastName = response.lastName;
+                        this.user.userName = response.userName;
+                        this.user.role = response.role;
                     }
                 } else {
                     await put(`/users/${this.user.id}`, {
@@ -69,17 +76,17 @@ export default defineComponent({
             }
         }
     },
-    emits: ['activateUser', 'deleteUser'],
+    emits: ['activateUser', 'deleteUser', 'fetch'],
 })
 </script>
 
 <template>
     <tr :class="{ editable, inactive: !user.isActive }"  @blur="disableEdit(user.id, user.isNew)"> <!-- this blur doesn't work here because this table row is never actually clicked on, it works in the td elements, but to prevent 'have I edited/saved this or not?' uncertainty & confusion I decided to leave it out here if the tr clickability is ever increased and there is a need for this to be utilized here as well -->
         <td>{{ user.id }}</td>
-        <td><Editable :editable="editable" v-model="email" /></td>
-        <td><Editable :editable="editable" v-model="firstName" /></td>
-        <td><Editable :editable="editable" v-model="lastName" /></td>
-        <td><Editable :editable="editable" v-model="userName" /></td>
+        <td class="email-editable"><Editable :editable="editable" v-model="email" /></td>
+        <td class="editable-class"><Editable :editable="editable" v-model="firstName" /></td>
+        <td class="editable-class"><Editable :editable="editable" v-model="lastName" /></td>
+        <td class="editable-class"><Editable :editable="editable" v-model="userName" /></td>
         <td>{{ userRole[role] }}</td>
         <td>
             <div v-if="user.isActive" class="pure-button-group" role="group">
@@ -97,8 +104,12 @@ export default defineComponent({
 
 <style scoped>
 
-.editable span[contenteditable] {
-    max-width: 160px;
+.email-editable {
+    max-width: 175px;
+}
+
+.editable-class {
+    max-width: 80px;
 }
 .pure-button-group {
     float: right;
