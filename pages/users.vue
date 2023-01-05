@@ -34,17 +34,10 @@ export default defineComponent({
 
             if(!user.isNew && confirm(`Are you sure you wish to re-enable user ${id}?`)) {
                 try {
-                    /*await put(`/users/${id}`, {
-                        isActive: user.isActive
-                    });*/
-                    //user.isActive = true;
-
-                    const res = await put(`/users/${id}`, {
+                    await put(`/users/${id}`, {
                         isActive: true
-                    }).then( (res) => { return JSON.parse(res.data)});
-                    user.isActive = res.isActive;
-
-
+                    });
+                    user.isActive = true;
                 }
                 catch (e) {
                     console.error(e);
