@@ -69,10 +69,6 @@ export default defineComponent({
                         userName: this.userName,
                         role: this.role,
                     });
-                    /*this.disableEdit(this.user.id, this.user.isNew, this.user.role);
-                    this.role = this.user.role;
-                    this.userRole[this.role] = this.userRole[this.user.role];*/
-
                 }
             } catch (e) {
                 console.error(e);
@@ -96,15 +92,13 @@ export default defineComponent({
         <td class="editable-class"><Editable :editable="editable" v-model="userName" /></td>
         <td>
             <select v-if="editable" v-model="role">
-                <!--<option value="none" selected disabled>{{ userRole[role] }}</option> -->
-                <option selected disabled>currently: {{ userRole[role] }}</option>
+                <option selected disabled>current: {{ userRole[role] }}</option>
                 <option>{{ userRole[0] }}</option>
                 <option>{{ userRole[1] }}</option>
                 <option>{{ userRole[2] }}</option> 
             </select>
             <label v-if="!editable">{{ userRole[role] }}</label>
         </td>
-        <!--<td>{{ userRole[role] }}<EnumEditable :editable="editable" v-model="role" /></td> -->
         <td>
             <div v-if="user.isActive" class="pure-button-group" role="group">
                 <button v-if="editable" class="pure-button button-delete" @click="disableEdit(user.id, user.isNew, user.role)">Close</button>

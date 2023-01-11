@@ -3,10 +3,12 @@ import { defineComponent, PropType } from "vue"
 import { Group, EducationType, SchoolYear } from "@/src/Group"
 import { post } from "@/src/requests";
 import Editable from "./Editable.vue";
+import groupUsersVue from "./groupUsers.vue";
 
 export default defineComponent({
     components: {
         Editable,
+        groupUsersVue
     },
     props: {
         group: {
@@ -37,11 +39,17 @@ export default defineComponent({
             this.EducationType[this.educationType] = this.EducationType[educationType];
             this.SchoolYear[this.schoolYear] = this.SchoolYear[schoolYear];
         },
-        gotoGroupUsers(id: string) {
-            this.$router.push({path: `/groups/${id}/users`});
+        displayGroupUsers(id: string) {
+
+            this.$emit('showGroupUsers', id);
+            //this.$router.push({path: `/groups/${id}/users`});
+            //this.$router.push({ path: '/groups/:id/users', name: 'groups.users', component: forumsVue })
+
+            //this.$router.push({path: `/groups/${id}/groupUsers`, name: 'groups.users', params: { id: id }, component: groupUsersVue});
         },
-        gotoGroupSets(id: string) {
-            this.$router.push({path: `/groups/${id}/sets`});
+        displayGroupSets(id: string) {
+            //this.$router.push({path: `/groups/${id}/sets`});
+            this.$emit('showGroupSets', id);
         },
         async save() {
             try {
@@ -63,7 +71,7 @@ export default defineComponent({
             }
         }
     },
-    emits: ['closeGroup', 'deleteGroup'],
+    emits: ['closeGroup', 'deleteGroup', 'showGroupUsers', 'showGroupSets'],
 })
 </script>
 
@@ -74,7 +82,7 @@ export default defineComponent({
         <td><Editable :editable="editable" v-model="subject" /></td>
         <td>
             <select v-if="editable" v-model="educationType">
-                <option selected disabled>currently: {{ EducationType[educationType] }}</option>
+                <option selected disabled>current: {{ EducationType[educationType] }}</option>
                 <option>{{ EducationType[0] }}</option>
                 <option>{{ EducationType[1] }}</option>
                 <option>{{ EducationType[2] }}</option>
@@ -90,7 +98,7 @@ export default defineComponent({
         </td>
         <td>
             <select v-if="editable" v-model="schoolYear">
-                <option selected disabled>currently: {{ SchoolYear[schoolYear] }}</option>
+                <option selected disabled>current: {{ SchoolYear[schoolYear] }}</option>
                 <option>{{ SchoolYear[0] }}</option>
                 <option>{{ SchoolYear[1] }}</option>
                 <option>{{ SchoolYear[2] }}</option>
@@ -103,13 +111,11 @@ export default defineComponent({
             </select>
             <label v-if="!editable">{{ SchoolYear[schoolYear] }}</label>
         </td>
-        <!--<td>{{ EducationType[educationType] }}</td>
-        <td>{{ SchoolYear[schoolYear] }}</td>-->
         <td>
-            <button class="button-secondary pure-button" @click="gotoGroupUsers(group.id)">Group Users</button>
+            <button class="button-secondary pure-button" @click="displayGroupUsers(group.id)">Group Users</button>
         </td>
         <td>
-            <button class="button-secondary pure-button" @click="gotoGroupSets(group.id)">Group Sets</button>
+            <button class="button-secondary pure-button" @click="displayGroupSets(group.id)">Group Sets</button>
         </td>
         <td>
             <div class="pure-button-group" role="group">
@@ -118,9 +124,6 @@ export default defineComponent({
                 <button v-else class="pure-button pure-button-primary" @click="edit">Edit</button>
                 <button class="pure-button button-delete" @click="$emit('deleteGroup', group.id)">Deactivate</button>
             </div>
-            <!-- <div v-else class="pure-button-group" role="group">
-                <button class="pure-button button-delete" @click="$emit('activateUser', user.id)">Activate</button>
-            </div> -->
         </td>
     </tr>
 </template>
