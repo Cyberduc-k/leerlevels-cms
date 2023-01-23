@@ -1,5 +1,6 @@
 <script lang="ts">
 import Header from "@/components/Header.vue";
+import { AnswerOption } from "@/src/AnswerOption";
 import { Group, EducationType, SchoolYear } from "@/src/Group";
 import { Set } from "~/src/Set";
 import { Target } from "~/src/Target";
@@ -10,6 +11,7 @@ import GroupUserRow from "@/components/GroupUserRow.vue";
 import GroupSetRow from "~/components/GroupSetRow.vue";
 import GroupTargetRow from "~/components/GroupTargetRow.vue";
 import GroupMcqRow from "~/components/GroupMcqRow.vue";
+import McqAnswerRow from "~/components/McqAnswerRow.vue";
 import { defineComponent, PropType } from "vue"
 import { get } from "@/src/requests";
 
@@ -21,6 +23,7 @@ export default defineComponent({
         GroupSetRow,
         GroupTargetRow,
         GroupMcqRow,
+        McqAnswerRow,
     },
     data: () => ({
         groups: [] as Group[],
@@ -28,6 +31,7 @@ export default defineComponent({
         groupSets: [] as Set[],
         setTargets: [] as Target[],
         targetMcqs: [] as Mcq[],
+        mcqAnswers: [] as AnswerOption[],
         groupId: "",
         groupName: "",
         groupSubject: "",
@@ -39,6 +43,7 @@ export default defineComponent({
         showGroupSet: false,
         showSetTarget: false,
         showTargetMcq: false,
+        showMcqAnswer: false,
         setGroupId: "",
         setGroupName: "",
         setGroupSubject: "",
@@ -48,7 +53,10 @@ export default defineComponent({
         setName: "",
         targetId: "",
         targetName: "",
-
+        mcqId: "",
+        mcqText: "",
+        mcqExplanation: "",
+        mcqAllowRandom: false,
     }),
     beforeCreate() {
         if (this.$store.state.authToken === "") {
@@ -138,6 +146,23 @@ export default defineComponent({
             }
 
         },
+        async showMcqAnswers(id: string) {
+            try {
+                const result = await get(`/mcqs/${id}`).then( (result) => {return JSON.parse(result.data)});
+
+                this.mcqId = result.id;
+                this.mcqText = result.questionText;
+                this.mcqExplanation = result.explanation;
+                this.mcqAllowRandom = result.allowRandom;
+
+                this.mcqAnswers = result.answerOptions;
+
+                this.showMcqAnswer = true;
+
+            } catch (e: any) {
+                console.error(e);
+            }
+        }
     },
     async fetch() {
             try {
@@ -270,14 +295,40 @@ export default defineComponent({
                         <th>Text</th>
                         <th>Explanation</th>
                         <th>Allow Random</th>
+                        <th>Answer Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <GroupMcqRow v-for="mcq in targetMcqs" :key="mcq.id" :mcq="mcq" @showMcqAnswers="showMcqAnswers"/>
+                </tbody>
+            </table>
+        </section>
+
+    <!-- Question Answers-->
+        <section v-if="showMcqAnswer">
+            <header class="pure-g">
+                <h1>Question Answer Options</h1>
+                <h2 class="groupHeaderTwo">&nbsp;(Multiple Choice Question: {{ mcqId }})</h2>
+               <!-- <h2 class="groupHeaderTwo">-&nbsp;Text: {{ mcqText }}&nbsp;</h2>
+                <h2 class="groupHeaderTwo">-&nbsp;Explanation: {{ mcqExplanation }}&nbsp;</h2>
+                <h2 class="groupHeaderTwo">-&nbsp;Allow Random: {{ mcqAllowRandom }})</h2> -->
+            </header>
+            <table class="pure-table pure-table-horizontal">
+                <thead>
+                    <tr>
+                        <th id="id-column">Id</th>
+                        <th>Text</th>
+                        <th>Index</th>
+                        <th>Is Correct</th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <GroupMcqRow v-for="mcq in targetMcqs" :key="mcq.id" :mcq="mcq" />
+                    <McqAnswerRow v-for="answerOption in mcqAnswers" :key="answerOption.id" :answer="answerOption"/>
                 </tbody>
             </table>
         </section>
+
     </main>
 </template>
 

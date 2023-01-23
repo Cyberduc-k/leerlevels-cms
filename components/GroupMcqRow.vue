@@ -41,7 +41,7 @@ export default defineComponent({
             <Editable :editable="editable" v-model="explanation" />
         </td>
         <td>
-            <Editable :editable="editable" v-model="allowRandom" />
+            <input type="checkbox" :disabled="!editable" v-model="allowRandom" />
         </td>
         <td>
             <button class="button-secondary pure-button" @click="displayMcqAnswers(mcq.id)">Answers</button>
