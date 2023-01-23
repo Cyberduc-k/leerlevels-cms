@@ -66,8 +66,8 @@ export default defineComponent({
 <template>
     <tr :class="{ editable }">
         <td>{{ forum.id }}</td>
-        <td><Editable :editable="editable" v-model="title" /></td>
-        <td><Editable :editable="editable" v-model="description" /></td>
+        <td class="editable-class"><Editable :editable="editable" v-model="title" /></td>
+        <td class="editable-class"><Editable :editable="editable" v-model="description" /></td>
         <td>
           <div class="pure-button-group" role="group">
                 <button v-if="editable" class="pure-button button-delete" @click="disableEdit(forum.id, forum.isNew)">Close</button>
@@ -82,5 +82,10 @@ export default defineComponent({
 <style scoped>
 .pure-button-group {
     float: right;
+}
+
+.editable-class {
+    max-width: 370px;
+    word-wrap: anywhere;
 }
 </style>

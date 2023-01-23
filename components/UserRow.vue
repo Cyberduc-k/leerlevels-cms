@@ -117,6 +117,7 @@ export default defineComponent({
 
 .email-editable {
     max-width: 175px;
+    word-wrap: anywhere;
 }
 
 .editable-class {

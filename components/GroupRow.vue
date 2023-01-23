@@ -3,12 +3,10 @@ import { defineComponent, PropType } from "vue"
 import { Group, EducationType, SchoolYear } from "@/src/Group"
 import { post } from "@/src/requests";
 import Editable from "./Editable.vue";
-import groupUsersVue from "./groupUsers.vue";
 
 export default defineComponent({
     components: {
         Editable,
-        groupUsersVue
     },
     props: {
         group: {
@@ -40,15 +38,9 @@ export default defineComponent({
             this.SchoolYear[this.schoolYear] = this.SchoolYear[schoolYear];
         },
         displayGroupUsers(id: string) {
-
             this.$emit('showGroupUsers', id);
-            //this.$router.push({path: `/groups/${id}/users`});
-            //this.$router.push({ path: '/groups/:id/users', name: 'groups.users', component: forumsVue })
-
-            //this.$router.push({path: `/groups/${id}/groupUsers`, name: 'groups.users', params: { id: id }, component: groupUsersVue});
         },
         displayGroupSets(id: string) {
-            //this.$router.push({path: `/groups/${id}/sets`});
             this.$emit('showGroupSets', id);
         },
         async save() {

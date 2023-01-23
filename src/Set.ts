@@ -2,8 +2,10 @@ import { Target } from "./Target";
 import { User } from "./User";
 
 export interface Set{
-    Id:string,
-    Name:string,
-    User: User[]
-    Target: Target[]
+    id:string,
+    name:string,
+    user: User[]
+    target: Target[]
+
+    isNew: Boolean,
 }
