@@ -3,7 +3,7 @@ import Header from "@/components/Header.vue";
 import { Group, EducationType, SchoolYear } from "@/src/Group";
 import GroupRow from "@/components/GroupRow.vue";
 import { User, UserRole } from "@/src/User";
-import UserRow from "@/components/UserRow.vue";
+import GroupUserRow from "@/components/GroupUserRow.vue";
 import { defineComponent, PropType } from "vue"
 import { get } from "@/src/requests";
 
@@ -11,7 +11,7 @@ export default defineComponent({
     components: {
         Header,
         GroupRow,
-        UserRow
+        GroupUserRow,
     },
     data: () => ({
         groups: [] as Group[],
@@ -118,7 +118,7 @@ export default defineComponent({
                 </tr>
             </thead>
             <tbody>
-                <UserRow v-for="user in groupUsers" :key="user.id" :user="user"/>
+                <GroupUserRow v-for="user in groupUsers" :key="user.id" :user="user"/>
             </tbody>
         </table>
     </section>
