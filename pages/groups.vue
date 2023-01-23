@@ -1,9 +1,12 @@
 <script lang="ts">
 import Header from "@/components/Header.vue";
 import { Group, EducationType, SchoolYear } from "@/src/Group";
+import { Set } from "~/src/Set";
+import { Target } from "~/src/Target";
 import GroupRow from "@/components/GroupRow.vue";
 import { User, UserRole } from "@/src/User";
 import GroupUserRow from "@/components/GroupUserRow.vue";
+import GroupSetRow from "~/components/GroupSetRow.vue";
 import { defineComponent, PropType } from "vue"
 import { get } from "@/src/requests";
 
@@ -12,10 +15,13 @@ export default defineComponent({
         Header,
         GroupRow,
         GroupUserRow,
+        GroupSetRow,
     },
     data: () => ({
         groups: [] as Group[],
         groupUsers: [] as User[],
+        groupSets: [] as Set[],
+        setTargets: [] as Target[],
         groupId: "",
         groupName: "",
         groupSubject: "",
@@ -23,7 +29,13 @@ export default defineComponent({
         groupSchoolYear: SchoolYear.One,
         EducationType: EducationType,
         SchoolYear: SchoolYear,
-        showGroupUser: false
+        showGroupUser: false,
+        showGroupSet: false,
+        setGroupId: "",
+        setGroupName: "",
+        setGroupSubject: "",
+        setGroupEducationType: EducationType.Basisschool,
+        setGroupSchoolYear: SchoolYear.One,
     }),
     methods: {
       AddGroup() {
@@ -56,7 +68,27 @@ export default defineComponent({
                 console.error(e);
             }
 
-        }
+        },
+        async showGroupSets(id: string) {
+            try {
+                const result = await get(`/groups/${id}`).then( (result) => { return JSON.parse(result.data)});
+
+                this.setGroupId = result.id;
+                this.setGroupName = result.name;
+                this.setGroupSubject = result.subject;
+                this.setGroupEducationType = result.educationType;
+                this.setGroupSchoolYear = result.schoolYear;
+
+                this.groupSets = result.sets;
+
+                this.setTargets = result.sets.targets;
+
+                this.showGroupSet = true;
+
+            } catch(e: any) {
+                console.error(e);
+            }
+        },
     },
     async fetch() {
             try {
@@ -91,7 +123,7 @@ export default defineComponent({
                     </tr>
                 </thead>
                 <tbody>
-                    <GroupRow v-for="group in groups" :key="group.id" :group="group" @closeGroup="closeGroup" @showGroupUsers="showGroupUsers"/>
+                    <GroupRow v-for="group in groups" :key="group.id" :group="group" @closeGroup="closeGroup" @showGroupUsers="showGroupUsers" @showGroupSets="showGroupSets"/>
                 </tbody>
             </table>
         </section>
@@ -108,7 +140,7 @@ export default defineComponent({
         <table class="pure-table pure-table-horizontal">
             <thead>
                 <tr>
-                    <th id="id-column">User Id</th>
+                    <th id="id-column">Set Id</th>
                         <th>Email</th>
                         <th>First Name</th>
                         <th>Last Name</th>
@@ -119,6 +151,29 @@ export default defineComponent({
             </thead>
             <tbody>
                 <GroupUserRow v-for="user in groupUsers" :key="user.id" :user="user"/>
+            </tbody>
+        </table>
+    </section>
+
+    <section v-if="showGroupSet">
+        <header class="pure-g">
+            <h1>Group Sets</h1>
+            <h2 class="groupUsersHeaderTwo">&nbsp;(Group: {{ setGroupId }}&nbsp;</h2>
+            <h2 class="groupUsersHeaderTwo">-&nbsp;Name: {{ setGroupName }}&nbsp;</h2>
+            <h2 class="groupUsersHeaderTwo">-&nbsp;Subject: {{ setGroupSubject }}&nbsp;</h2>
+            <h2 class="groupUsersHeaderTwo">-&nbsp;Education type: {{ EducationType[setGroupEducationType] }}&nbsp;</h2>
+            <h2 class="groupUsersHeaderTwo">-&nbsp;Schoolyear: {{ SchoolYear[setGroupSchoolYear] }})</h2>
+        </header>
+        <table class="pure-table pure-table-horizontal">
+            <thead>
+                <tr>
+                    <th id="id-column">Set Id</th>
+                        <th>Name</th>
+                        <th>Set Targets</th>
+                </tr>
+            </thead>
+            <tbody>
+                <GroupSetRow v-for="set in groupSets" :key="set.id" :set="set"/>
             </tbody>
         </table>
     </section>

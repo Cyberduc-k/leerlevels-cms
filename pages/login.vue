@@ -27,7 +27,6 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { UserRole } from "@/src/User"
 
 export default defineComponent({
     data() {

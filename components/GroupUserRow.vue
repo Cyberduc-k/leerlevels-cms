@@ -1,7 +1,6 @@
 <script lang="ts">
 import { defineComponent, PropType } from "vue"
 import { User, UserRole } from "@/src/User"
-import { post, put } from "~/src/requests";
 import Editable from "./Editable.vue";
 
 export default defineComponent({
@@ -25,9 +24,6 @@ export default defineComponent({
             role: this.user.role,
         };
     },
-    methods: {
-    },
-    emits: ['fetch'],
 })
 </script>
 
@@ -39,12 +35,6 @@ export default defineComponent({
         <td class="editable-class"><Editable :editable="editable" v-model="lastName" /></td>
         <td class="editable-class"><Editable :editable="editable" v-model="userName" /></td>
         <td>
-            <select v-if="editable" v-model="role">
-                <option selected disabled>current: {{ userRole[role] }}</option>
-                <option>{{ userRole[0] }}</option>
-                <option>{{ userRole[1] }}</option>
-                <option>{{ userRole[2] }}</option> 
-            </select>
             <label v-if="!editable">{{ userRole[role] }}</label>
         </td>
     </tr>

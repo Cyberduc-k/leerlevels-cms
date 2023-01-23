@@ -11,9 +11,7 @@ export default defineComponent({
         ForumRow,
     },
     data: () => ({
-        forums: [] as Forum[]/*,
-        page: 0,
-        limit: 10,*/
+        forums: [] as Forum[],
     }),
     methods: {
       AddForum() {
@@ -27,7 +25,6 @@ export default defineComponent({
         async deleteForum(id: string) {
                 const index = this.forums.findIndex(u => u.id == id);
                 const forum = this.forums[index];
-                //this.forums.splice(index, 1);
 
             if(forum.isNew && this.forums != undefined) {
                 this.forums.pop();
@@ -41,26 +38,9 @@ export default defineComponent({
                 }
             }
         },
-        /*async deleteForum(id: string) {
-            if (confirm(`Are you sure you wish to delete forum ${id}?`)) {
-                const index = this.forums.findIndex(u => u.id == id);
-                this.forums.splice(index, 1);
-            }
-        },
-        prevPage() {
-            if (this.page > 0) {
-                this.page--;
-                this.$fetch();
-            }
-        },
-        nextPage() {
-            this.page++;
-            this.$fetch();
-        },*/
     },
     async fetch() {
         try {
-            // const paginated = await get(`/forums?limit=${this.limit}&page=${this.page}`);
             const result = await get(`/forums`).then( (result) => { return JSON.parse(result.data)});
             this.forums = result;
         } catch (e: any) {
@@ -92,15 +72,9 @@ export default defineComponent({
                     <ForumRow v-for="forum in forums" :key="forum.id" :forum="forum" @deleteForum="deleteForum"/>
                 </tbody>
             </table>
-            <!-- <div class="pure-button-group pagination" role="group">
-                <button class="pure-button" @click="prevPage" :disabled="page == 0">Previous</button>
-                <a class="pure-button">Page {{ page + 1 }}</a>
-                <button class="pure-button" @click="nextPage" :disabled="forums.length < limit">Next</button>
-            </div> -->
         </section>
     </main>
 </template>
-
 
 <style scoped>
 table {

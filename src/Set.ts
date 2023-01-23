@@ -7,5 +7,5 @@ export interface Set{
     user: User[]
     target: Target[]
 
-    isNew: Boolean,
+    isNew: boolean,
 }
