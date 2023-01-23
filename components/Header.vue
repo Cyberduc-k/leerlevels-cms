@@ -3,7 +3,8 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
     methods: {
-        logout() {
+        logout()
+        {
             this.$store.commit('setToken', "");
             this.$store.commit('setAuthTokenExpiresAt', "");
             this.$store.commit('setStateUser', {});
@@ -11,8 +12,8 @@ export default defineComponent({
             this.$store.commit('setRefreshTokenExpiresAt', "");
 
             const route = this.$route.fullPath;
-            
-            this.$router.push({ path: "/login"});
+
+            this.$router.push({ path: "/login" });
         },
     }
 });
@@ -23,7 +24,7 @@ export default defineComponent({
         <nav class="pure-menu pure-menu-horizontal">
             <ul class="pure-menu-list">
                 <li class="pure-menu-item">
-                    <img class="leerlevels-image" src="@/assets/LeerLevels_Logo_Horizontal.svg"/>
+                    <img class="leerlevels-image" src="@/assets/LeerLevels_Logo_Horizontal.svg" />
                 </li>
                 <NuxtLink to="/" custom v-slot="{ href, navigate, isExactActive }">
                     <li :class="{ 'pure-menu-item': true, 'pure-menu-selected': isExactActive }">
@@ -43,6 +44,16 @@ export default defineComponent({
                 <NuxtLink to="/groups" custom v-slot="{ href, navigate, isActive }">
                     <li :class="{ 'pure-menu-item': true, 'pure-menu-selected': isActive }">
                         <a class="pure-menu-link" :href="href" @click="navigate">Groups</a>
+                    </li>
+                </NuxtLink>
+                <NuxtLink to="/targets" custom v-slot="{ href, navigate, isActive }">
+                    <li :class="{ 'pure-menu-item': true, 'pure-menu-selected': isActive }">
+                        <a class="pure-menu-link" :href="href" @click="navigate">Targets</a>
+                    </li>
+                </NuxtLink>
+                <NuxtLink to="/questions" custom v-slot="{ href, navigate, isActive }">
+                    <li :class="{ 'pure-menu-item': true, 'pure-menu-selected': isActive }">
+                        <a class="pure-menu-link" :href="href" @click="navigate">Questions</a>
                     </li>
                 </NuxtLink>
                 <li class="pure-menu-item logout">

@@ -1,6 +1,9 @@
-export interface AnswerOption{
-    Id:string  
-    Index: number  
-    Text:string  
-    IsCorrect: boolean  
+export interface AnswerOption
+{
+    id: string
+    index: number
+    text: string
+    isCorrect: boolean
+
+    isNew: boolean
 }

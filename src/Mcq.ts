@@ -1,11 +1,12 @@
 import { AnswerOption } from "./AnswerOption"
-import { Target } from "./Target"
 
-export interface Mcq{
-    Id: string  
-    Target: Target 
-    QuestionText: string  
-    Explanation: string  
-    AllowRandom: boolean  
-    AnswerOptions: AnswerOption[]
+export interface Mcq
+{
+    id: string
+    questionText: string
+    explanation: string
+    allowRandom: boolean
+    answerOptions: AnswerOption[]
+
+    isNew: boolean,
 }

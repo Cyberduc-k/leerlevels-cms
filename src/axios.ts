@@ -1,9 +1,12 @@
 import axios, { AxiosHeaders, AxiosRequestConfig } from "axios";
 
-export function setToken(token: string) {
+export function setToken(token: string)
+{
     (config.headers as AxiosHeaders).set("Authorization", `Bearer ${token}`);
 }
 
-const config: AxiosRequestConfig = { headers: new AxiosHeaders() };
+const config: AxiosRequestConfig = {
+    headers: new AxiosHeaders(),
+};
 
 export default new axios.Axios(config);
