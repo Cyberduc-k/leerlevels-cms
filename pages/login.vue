@@ -1,32 +1,6 @@
-<template>
-    <main>
-        <section class="login-window">
-            <img class="LeerLevels-image" src="@/assets/LeerLevels_Logo_Horizontal.svg"/>
-            <h1>CMS Management Portal Login</h1>
-                <form class="pure-form pure-form-stacked" @submit="loginSubmit">
-                    <fieldset>
-                        <section class="pure-control-group">
-                            <label for="stacked-email" class="labelText">Email Address</label>
-                            <input type="email" id="stacked-email" placeholder="Email Address" required v-model="emailInput" @input="validate"/>
-                        </section>
-                        <section class="pure-control-group">
-                            <label for="stacked-password" class="labelText">Password</label>
-                            <input type="password" id="stacked-password" placeholder="Password" required v-model="passwordInput" @input="validate" @keypress.prevent.enter="login"/>
-                        </section>
-                        <section  class="pure-control-group">
-                            <label type="text" class="labelText" id="errorLabel" v-show="loginError">Invalid username or password entered!</label>
-                        </section>
-                        <section class="pure-controls">
-                            <input type="submit" class="pure-button pure-button-primary" :disabled="!isValid" value="login" />
-                        </section>
-                    </fieldset>
-                </form>
-            </section>
-    </main>
-</template>
-
 <script lang="ts">
-import { defineComponent } from "vue"
+import { defineComponent } from "vue";
+import { UserRole } from "~/src/User";
 
 export default defineComponent({
     data() {
@@ -58,13 +32,19 @@ export default defineComponent({
                 if (await this.$store.dispatch("login", { email: this.emailInput, password: this.passwordInput })) {
                     this.emailInput = "";
                     this.passwordInput = "";
-                    
-                    if (this.$route.query.next /*&& this.$store.state.userRole == UserRole.Admin*/) {
-                        this.$router.push(this.$route.query.next as string);
-                    } else {
-                        this.$router.push("/");
+                    console.log(this.$store.state.stateUser.role.toString());
+                    console.log(UserRole[this.$store.state.stateUser.role]);
+                    if(this.$store.state.stateUser.role == UserRole.Administrator){
+                        if (this.$route.query.next) {
+                            this.$router.push(this.$route.query.next as string);
+                        } else {
+                            this.$router.push("/login");
+                        }
+                        this.loginError = false;
                     }
-                    this.loginError = false;
+                    else {
+                        this.$router.push("/login");
+                    }
                 } else {
                     this.loginError = true;
                 }
@@ -79,6 +59,33 @@ export default defineComponent({
     }
 });
 </script>
+
+<template>
+    <main>
+        <section class="login-window">
+            <img class="LeerLevels-image" src="@/assets/LeerLevels_Logo_Horizontal.svg"/>
+            <h1>CMS Management Portal Login</h1>
+                <form class="pure-form pure-form-stacked" @submit="loginSubmit">
+                    <fieldset>
+                        <section class="pure-control-group">
+                            <label for="stacked-email" class="labelText">Email Address</label>
+                            <input type="email" id="stacked-email" placeholder="Email Address" required v-model="emailInput" @input="validate"/>
+                        </section>
+                        <section class="pure-control-group">
+                            <label for="stacked-password" class="labelText">Password</label>
+                            <input type="password" id="stacked-password" placeholder="Password" required v-model="passwordInput" @input="validate" @keypress.prevent.enter="login"/>
+                        </section>
+                        <section  class="pure-control-group">
+                            <label type="text" class="labelText" id="errorLabel" v-show="loginError">Invalid username or password entered!</label>
+                        </section>
+                        <section class="pure-controls">
+                            <input type="submit" class="pure-button pure-button-primary" :disabled="!isValid" value="login" />
+                        </section>
+                    </fieldset>
+                </form>
+            </section>
+    </main>
+</template>
 
 <style scoped>
 
