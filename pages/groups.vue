@@ -5,9 +5,11 @@ import { Set } from "~/src/Set";
 import { Target } from "~/src/Target";
 import GroupRow from "@/components/GroupRow.vue";
 import { User, UserRole } from "@/src/User";
+import { Mcq } from "@/src/Mcq";
 import GroupUserRow from "@/components/GroupUserRow.vue";
 import GroupSetRow from "~/components/GroupSetRow.vue";
 import GroupTargetRow from "~/components/GroupTargetRow.vue";
+import GroupMcqRow from "~/components/GroupMcqRow.vue";
 import { defineComponent, PropType } from "vue"
 import { get } from "@/src/requests";
 
@@ -18,12 +20,14 @@ export default defineComponent({
         GroupUserRow,
         GroupSetRow,
         GroupTargetRow,
+        GroupMcqRow,
     },
     data: () => ({
         groups: [] as Group[],
         groupUsers: [] as User[],
         groupSets: [] as Set[],
         setTargets: [] as Target[],
+        targetMcqs: [] as Mcq[],
         groupId: "",
         groupName: "",
         groupSubject: "",
@@ -34,6 +38,7 @@ export default defineComponent({
         showGroupUser: false,
         showGroupSet: false,
         showSetTarget: false,
+        showTargetMcq: false,
         setGroupId: "",
         setGroupName: "",
         setGroupSubject: "",
@@ -41,6 +46,9 @@ export default defineComponent({
         setGroupSchoolYear: SchoolYear.One,
         setId: "",
         setName: "",
+        targetId: "",
+        targetName: "",
+
     }),
     beforeCreate() {
         if (this.$store.state.authToken === "") {
@@ -64,6 +72,7 @@ export default defineComponent({
         async showGroupUsers(id: string) {
             try {
                 const result = await get(`/groups/${id}`).then( (result) => { return JSON.parse(result.data)});
+
                 this.groupId = result.id;
                 this.groupName = result.name;
                 this.groupSubject = result.subject;
@@ -91,8 +100,6 @@ export default defineComponent({
 
                 this.groupSets = result.sets;
 
-                //this.setTargets = result.sets.targets;
-
                 this.showGroupSet = true;
 
             } catch(e: any) {
@@ -108,13 +115,28 @@ export default defineComponent({
 
                 this.setTargets = result.targets;
 
-                //this.targetQuestions = results.mcqs;
-
                 this.showSetTarget = true;
 
             } catch(e: any) {
                 console.error(e);
             }
+        },
+        async showTargetMcqs(id: string)
+        {
+            try {
+                const result = await get(`/targets/${id}`).then( (result) => {return JSON.parse(result.data)});
+
+                this.targetId = result.id;
+                this.targetName = result.label;
+
+                this.targetMcqs = result.mcqs;
+
+                this.showTargetMcq = true;
+
+            } catch (e: any) {
+                console.error(e);
+            }
+
         },
     },
     async fetch() {
@@ -225,14 +247,37 @@ export default defineComponent({
                     <th>Target Explaination</th>
                     <th>Youtube Id</th>
                     <th>Image Id</th>
-                    <th></th>
+                    <th>Target Questions</th>
                 </tr>
             </thead>
             <tbody>
-                <GroupTargetRow v-for="target in setTargets" :key="target.id" :target="target"/>
+                <GroupTargetRow v-for="target in setTargets" :key="target.id" :target="target" @showTargetMcqs="showTargetMcqs"/>
             </tbody>
         </table>
     </section>
+
+    <!--Target Questions-->
+    <section v-if="showTargetMcq">
+            <header class="pure-g">
+                <h1>Target Questions</h1>
+                <h2 class="groupHeaderTwo">&nbsp;(Target: {{ targetId }}&nbsp;</h2>
+                <h2 class="groupHeaderTwo">-&nbsp;Label: {{ targetName }})</h2>
+            </header>
+            <table class="pure-table pure-table-horizontal">
+                <thead>
+                    <tr>
+                        <th id="id-column">Id</th>
+                        <th>Text</th>
+                        <th>Explanation</th>
+                        <th>Allow Random</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <GroupMcqRow v-for="mcq in targetMcqs" :key="mcq.id" :mcq="mcq" />
+                </tbody>
+            </table>
+        </section>
     </main>
 </template>
 

@@ -25,7 +25,7 @@ export default defineComponent({
     },
     methods: {
         displayTargetQuestions(id: string) {
-            this.$emit('showTargetQuestions', id);
+            this.$emit('showTargetMcqs', id);
         }
     },
 })
