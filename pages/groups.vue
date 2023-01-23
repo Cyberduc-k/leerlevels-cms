@@ -5,8 +5,11 @@ import { Set } from "~/src/Set";
 import { Target } from "~/src/Target";
 import GroupRow from "@/components/GroupRow.vue";
 import { User, UserRole } from "@/src/User";
+import { Mcq } from "@/src/Mcq";
 import GroupUserRow from "@/components/GroupUserRow.vue";
 import GroupSetRow from "~/components/GroupSetRow.vue";
+import GroupTargetRow from "~/components/GroupTargetRow.vue";
+import GroupMcqRow from "~/components/GroupMcqRow.vue";
 import { defineComponent, PropType } from "vue"
 import { get } from "@/src/requests";
 
@@ -16,12 +19,15 @@ export default defineComponent({
         GroupRow,
         GroupUserRow,
         GroupSetRow,
+        GroupTargetRow,
+        GroupMcqRow,
     },
     data: () => ({
         groups: [] as Group[],
         groupUsers: [] as User[],
         groupSets: [] as Set[],
         setTargets: [] as Target[],
+        targetMcqs: [] as Mcq[],
         groupId: "",
         groupName: "",
         groupSubject: "",
@@ -31,11 +37,18 @@ export default defineComponent({
         SchoolYear: SchoolYear,
         showGroupUser: false,
         showGroupSet: false,
+        showSetTarget: false,
+        showTargetMcq: false,
         setGroupId: "",
         setGroupName: "",
         setGroupSubject: "",
         setGroupEducationType: EducationType.Basisschool,
         setGroupSchoolYear: SchoolYear.One,
+        setId: "",
+        setName: "",
+        targetId: "",
+        targetName: "",
+
     }),
     beforeCreate() {
         if (this.$store.state.authToken === "") {
@@ -59,6 +72,7 @@ export default defineComponent({
         async showGroupUsers(id: string) {
             try {
                 const result = await get(`/groups/${id}`).then( (result) => { return JSON.parse(result.data)});
+
                 this.groupId = result.id;
                 this.groupName = result.name;
                 this.groupSubject = result.subject;
@@ -86,13 +100,43 @@ export default defineComponent({
 
                 this.groupSets = result.sets;
 
-                this.setTargets = result.sets.targets;
-
                 this.showGroupSet = true;
 
             } catch(e: any) {
                 console.error(e);
             }
+        },
+        async showSetTargets(id: string) {
+            try {
+                const result = await get(`/sets/${id}`).then( (result) => { return JSON.parse(result.data)});
+
+                this.setId = result.id;
+                this.setName = result.name;
+
+                this.setTargets = result.targets;
+
+                this.showSetTarget = true;
+
+            } catch(e: any) {
+                console.error(e);
+            }
+        },
+        async showTargetMcqs(id: string)
+        {
+            try {
+                const result = await get(`/targets/${id}`).then( (result) => {return JSON.parse(result.data)});
+
+                this.targetId = result.id;
+                this.targetName = result.label;
+
+                this.targetMcqs = result.mcqs;
+
+                this.showTargetMcq = true;
+
+            } catch (e: any) {
+                console.error(e);
+            }
+
         },
     },
     async fetch() {
@@ -125,6 +169,7 @@ export default defineComponent({
                         <th>SchoolYear</th>
                         <th>Group Users</th>
                         <th>Group Sets</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -132,26 +177,27 @@ export default defineComponent({
                 </tbody>
             </table>
         </section>
-
+        
+    <!--Group Users-->
     <section v-if="showGroupUser">
         <header class="pure-g">
             <h1>Group Users</h1>
-            <h2 class="groupUsersHeaderTwo">&nbsp;(Group: {{ groupId }}&nbsp;</h2>
-            <h2 class="groupUsersHeaderTwo">-&nbsp;Name: {{ groupName }}&nbsp;</h2>
-            <h2 class="groupUsersHeaderTwo">-&nbsp;Subject: {{ groupSubject }}&nbsp;</h2>
-            <h2 class="groupUsersHeaderTwo">-&nbsp;Education type: {{ EducationType[groupEducationType] }}&nbsp;</h2>
-            <h2 class="groupUsersHeaderTwo">-&nbsp;Schoolyear: {{ SchoolYear[groupSchoolYear] }})</h2>
+            <h2 class="groupHeaderTwo">&nbsp;(Group: {{ groupId }}&nbsp;</h2>
+            <h2 class="groupHeaderTwo">-&nbsp;Name: {{ groupName }}&nbsp;</h2>
+            <h2 class="groupHeaderTwo">-&nbsp;Subject: {{ groupSubject }}&nbsp;</h2>
+            <h2 class="groupHeaderTwo">-&nbsp;Education type: {{ EducationType[groupEducationType] }}&nbsp;</h2>
+            <h2 class="groupHeaderTwo">-&nbsp;Schoolyear: {{ SchoolYear[groupSchoolYear] }})</h2>
         </header>
         <table class="pure-table pure-table-horizontal">
             <thead>
                 <tr>
-                    <th id="id-column">Set Id</th>
-                        <th>Email</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>User Name</th>
-                        <th>Role</th>
-                        <th></th>
+                    <th id="id-column">Id</th>
+                    <th>Email</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>User Name</th>
+                    <th>Role</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -160,28 +206,78 @@ export default defineComponent({
         </table>
     </section>
 
+    <!--Group Sets-->
     <section v-if="showGroupSet">
         <header class="pure-g">
             <h1>Group Sets</h1>
-            <h2 class="groupUsersHeaderTwo">&nbsp;(Group: {{ setGroupId }}&nbsp;</h2>
-            <h2 class="groupUsersHeaderTwo">-&nbsp;Name: {{ setGroupName }}&nbsp;</h2>
-            <h2 class="groupUsersHeaderTwo">-&nbsp;Subject: {{ setGroupSubject }}&nbsp;</h2>
-            <h2 class="groupUsersHeaderTwo">-&nbsp;Education type: {{ EducationType[setGroupEducationType] }}&nbsp;</h2>
-            <h2 class="groupUsersHeaderTwo">-&nbsp;Schoolyear: {{ SchoolYear[setGroupSchoolYear] }})</h2>
+            <h2 class="groupHeaderTwo">&nbsp;(Group: {{ setGroupId }}&nbsp;</h2>
+            <h2 class="groupHeaderTwo">-&nbsp;Name: {{ setGroupName }}&nbsp;</h2>
+            <h2 class="groupHeaderTwo">-&nbsp;Subject: {{ setGroupSubject }}&nbsp;</h2>
+            <h2 class="groupHeaderTwo">-&nbsp;Education type: {{ EducationType[setGroupEducationType] }}&nbsp;</h2>
+            <h2 class="groupHeaderTwo">-&nbsp;Schoolyear: {{ SchoolYear[setGroupSchoolYear] }})</h2>
         </header>
         <table class="pure-table pure-table-horizontal">
             <thead>
                 <tr>
-                    <th id="id-column">Set Id</th>
-                        <th>Name</th>
-                        <th>Set Targets</th>
+                    <th id="id-column">Id</th>
+                    <th>Name</th>
+                    <th>Set Targets</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
-                <GroupSetRow v-for="set in groupSets" :key="set.id" :set="set"/>
+                <GroupSetRow v-for="set in groupSets" :key="set.id" :set="set" @showSetTargets="showSetTargets"/>
             </tbody>
         </table>
     </section>
+
+    <!--Set Targets-->
+    <section v-if="showSetTarget">
+        <header class="pure-g">
+            <h1>Set Targets</h1>
+            <h2 class="groupHeaderTwo">&nbsp;(Set: {{ setId }}&nbsp;</h2>
+            <h2 class="groupHeaderTwo">-&nbsp;Name: {{ setName }})</h2>
+        </header>
+        <table class="pure-table pure-table-horizontal">
+            <thead>
+                <tr>
+                    <th id="id-column">Id</th>
+                    <th>Label</th>
+                    <th>Description</th>
+                    <th>Target Explaination</th>
+                    <th>Youtube Id</th>
+                    <th>Image Id</th>
+                    <th>Target Questions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <GroupTargetRow v-for="target in setTargets" :key="target.id" :target="target" @showTargetMcqs="showTargetMcqs"/>
+            </tbody>
+        </table>
+    </section>
+
+    <!--Target Questions-->
+    <section v-if="showTargetMcq">
+            <header class="pure-g">
+                <h1>Target Questions</h1>
+                <h2 class="groupHeaderTwo">&nbsp;(Target: {{ targetId }}&nbsp;</h2>
+                <h2 class="groupHeaderTwo">-&nbsp;Label: {{ targetName }})</h2>
+            </header>
+            <table class="pure-table pure-table-horizontal">
+                <thead>
+                    <tr>
+                        <th id="id-column">Id</th>
+                        <th>Text</th>
+                        <th>Explanation</th>
+                        <th>Allow Random</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <GroupMcqRow v-for="mcq in targetMcqs" :key="mcq.id" :mcq="mcq" />
+                </tbody>
+            </table>
+        </section>
     </main>
 </template>
 
@@ -195,7 +291,7 @@ h1 {
     display: inline-block;
 }
 
-.groupUsersHeaderTwo {
+.groupHeaderTwo {
     margin-top: 26px;
 }
 
