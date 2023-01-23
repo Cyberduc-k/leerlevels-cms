@@ -21,7 +21,7 @@ export default defineComponent({
     },
     methods: {
         displaySetTargets(id: string) {
-
+            this.$emit('showSetTargets', id);
         }
     },
 })
