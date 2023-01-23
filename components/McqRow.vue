@@ -54,11 +54,14 @@ export default defineComponent({
                     });
                     let data = JSON.parse(response.data);
                     this.mcq.id = data.id;
+                    this.mcq.questionText = data.questionText;
+                    this.mcq.explanation = data.explanation;
+                    this.mcq.allowRandom = data.allowRandom;
                 } else
                 {
                     await put(`/mcqs/${this.mcq.id}`, {
                         questionText: this.text,
-                        targetExplanation: this.explanation,
+                        explanation: this.explanation,
                         allowRandom: this.allowRandom,
                     });
                 }
@@ -85,7 +88,7 @@ export default defineComponent({
             <Editable :editable="editable" v-model="explanation" />
         </td>
         <td>
-            <Editable :editable="editable" v-model="allowRandom" />
+            <input type="checkbox" :disabled="!editable" v-model="allowRandom" />
         </td>
         <td>
             <button class="button-secondary pure-button" @click="displayMcqAnswers(mcq.id)">Answers</button>

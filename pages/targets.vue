@@ -4,7 +4,7 @@ import { Target } from "~/src/Target";
 import TargetRow from "@/components/TargetRow.vue";
 import TargetMcqRow from "@/components/TargetMcqRow.vue";
 import { defineComponent } from "vue"
-import { get } from "@/src/requests";
+import { del, get } from "@/src/requests";
 import { Mcq } from "~/src/Mcq";
 
 export default defineComponent({
@@ -52,8 +52,29 @@ export default defineComponent({
             {
                 console.error(e);
             }
-
         },
+        async deleteTarget(id: string)
+        {
+            const index = this.targets.findIndex(u => u.id == id);
+            const target = this.targets[index];
+
+            if (target.isNew && this.targets != undefined)
+            {
+                this.targets.pop();
+            }
+
+            if (!target.isNew && confirm(`Are you sure you want to delete target ${id}?`))
+            {
+                try
+                {
+                    await del(`/targets/${id}`);
+                    this.$fetch();
+                } catch (e)
+                {
+                    console.error(e);
+                }
+            }
+        }
     },
     async fetch()
     {
@@ -93,8 +114,8 @@ export default defineComponent({
                     </tr>
                 </thead>
                 <tbody>
-                    <TargetRow v-for="target in targets" :key="target.id" :target="target" @closeTarget="closeTarget"
-                        @showTargetMcqs="showTargetMcqs" />
+                    <TargetRow v-for="target in targets" :key="target.id" :target="target" @deleteTarget="deleteTarget"
+                        @closeTarget="closeTarget" @showTargetMcqs="showTargetMcqs" />
                 </tbody>
             </table>
         </section>

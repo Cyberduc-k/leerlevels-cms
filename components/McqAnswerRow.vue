@@ -32,10 +32,10 @@ export default defineComponent({
             <Editable :editable="editable" v-model="text" />
         </td>
         <td class="editable-class">
-            <Editable :editable="editable" v-model="index" />
+            <input type="number" :disabled="!editable" v-model="index" />
         </td>
         <td class="editable-class">
-            <Editable :editable="editable" v-model="isCorrect" />
+            <input type="checkbox" :disabled="!editable" v-model="isCorrect" />
         </td>
     </tr>
 </template>
