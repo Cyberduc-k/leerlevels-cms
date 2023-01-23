@@ -37,6 +37,11 @@ export default defineComponent({
         setGroupEducationType: EducationType.Basisschool,
         setGroupSchoolYear: SchoolYear.One,
     }),
+    beforeCreate() {
+        if (this.$store.state.authToken === "") {
+            this.$router.replace({ path: "/login", query: { next: "/" } });
+        }
+    },
     methods: {
       AddGroup() {
             this.groups.push({

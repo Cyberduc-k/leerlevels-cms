@@ -114,7 +114,7 @@ export default defineComponent({
                 <button v-if="editable" class="pure-button button-delete" @click="disableEdit(group.isNew, group.educationType, group.schoolYear)">Close</button>
                 <button v-if="editable" class="pure-button pure-button-primary" @click="save">Save</button>
                 <button v-else class="pure-button pure-button-primary" @click="edit">Edit</button>
-                <button class="pure-button button-delete" @click="$emit('deleteGroup', group.id)">Deactivate</button>
+                <button class="pure-button button-delete" @click="$emit('deleteGroup', group.id)">Delete</button>
             </div>
         </td>
     </tr>

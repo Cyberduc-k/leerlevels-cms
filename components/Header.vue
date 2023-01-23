@@ -5,9 +5,14 @@ export default defineComponent({
     methods: {
         logout() {
             this.$store.commit('setToken', "");
+            this.$store.commit('setAuthTokenExpiresAt', "");
             this.$store.commit('setStateUser', {});
+            this.$store.commit('setRefreshToken', "");
+            this.$store.commit('setRefreshTokenExpiresAt', "");
+
             const route = this.$route.fullPath;
-            this.$router.push({ path: "/login"/*, query: { next: route }*/ });
+            
+            this.$router.push({ path: "/login"});
         },
     }
 });

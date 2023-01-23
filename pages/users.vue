@@ -15,6 +15,11 @@ export default defineComponent({
         page: 0,
         limit: 10,
     }),
+    beforeCreate() {
+        if (this.$store.state.authToken === "") {
+            this.$router.replace({ path: "/login", query: { next: "/" } });
+        }
+    },
     methods: {
         addUser() {
             this.users.push({

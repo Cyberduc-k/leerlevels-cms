@@ -13,6 +13,11 @@ export default defineComponent({
     data: () => ({
         forums: [] as Forum[],
     }),
+    beforeCreate() {
+        if (this.$store.state.authToken === "") {
+            this.$router.replace({ path: "/login", query: { next: "/" } });
+        }
+    },
     methods: {
       AddForum() {
             this.forums.push({
