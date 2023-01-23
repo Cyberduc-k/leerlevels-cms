@@ -3,7 +3,8 @@ import { defineComponent } from "vue";
 import { UserRole } from "~/src/User";
 
 export default defineComponent({
-    data() {
+    data()
+    {
         return {
             isValid: false,
             loginError: false,
@@ -12,47 +13,60 @@ export default defineComponent({
             emailRegex: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
         }
     },
-    beforeCreate(){
+    beforeCreate()
+    {
         //check if the user is still logged in and redirect to home page
-        if (this.$store.state.authToken !== "") {
+        if (this.$store.state.authToken !== "")
+        {
             this.$router.push('/');
         }
     },
     methods: {
-        validate() {
+        validate()
+        {
             this.isValid = this.checkEmail() && this.passwordInput !== "";
         },
-        loginSubmit() :boolean {
+        loginSubmit(): boolean
+        {
             event?.preventDefault();
             this.login();
             return false;
         },
-        async login() {
-            if (this.checkEmail()) {
-                if (await this.$store.dispatch("login", { email: this.emailInput, password: this.passwordInput })) {
+        async login()
+        {
+            if (this.checkEmail())
+            {
+                if (await this.$store.dispatch("login", { email: this.emailInput, password: this.passwordInput }))
+                {
                     this.emailInput = "";
                     this.passwordInput = "";
-                    console.log(this.$store.state.stateUser.role.toString());
-                    console.log(UserRole[this.$store.state.stateUser.role]);
-                    if(this.$store.state.stateUser.role == UserRole.Administrator){
-                        if (this.$route.query.next) {
+
+                    if (this.$store.state.stateUser.role == UserRole.Administrator)
+                    {
+                        if (this.$route.query.next)
+                        {
                             this.$router.push(this.$route.query.next as string);
-                        } else {
-                            this.$router.push("/login");
+                        } else
+                        {
+                            this.$router.push("/");
                         }
                         this.loginError = false;
                     }
-                    else {
+                    else
+                    {
                         this.$router.push("/login");
                     }
-                } else {
+                } else
+                {
                     this.loginError = true;
                 }
-            } else {
+            } else
+            {
                 console.log("the email address could not be validated");
             }
         },
-        checkEmail() {
+        checkEmail()
+        {
             //this will return true if the input is not empty and matches the regular expression of a valid email address, otherwise it returns false
             return !!((this.emailInput === "") ? "" : !!(this.emailRegex.test(this.emailInput)));
         },
@@ -63,32 +77,35 @@ export default defineComponent({
 <template>
     <main>
         <section class="login-window">
-            <img class="LeerLevels-image" src="@/assets/LeerLevels_Logo_Horizontal.svg"/>
+            <img class="LeerLevels-image" src="@/assets/LeerLevels_Logo_Horizontal.svg" />
             <h1>CMS Management Portal Login</h1>
-                <form class="pure-form pure-form-stacked" @submit="loginSubmit">
-                    <fieldset>
-                        <section class="pure-control-group">
-                            <label for="stacked-email" class="labelText">Email Address</label>
-                            <input type="email" id="stacked-email" placeholder="Email Address" required v-model="emailInput" @input="validate"/>
-                        </section>
-                        <section class="pure-control-group">
-                            <label for="stacked-password" class="labelText">Password</label>
-                            <input type="password" id="stacked-password" placeholder="Password" required v-model="passwordInput" @input="validate" @keypress.prevent.enter="login"/>
-                        </section>
-                        <section  class="pure-control-group">
-                            <label type="text" class="labelText" id="errorLabel" v-show="loginError">Invalid username or password entered!</label>
-                        </section>
-                        <section class="pure-controls">
-                            <input type="submit" class="pure-button pure-button-primary" :disabled="!isValid" value="login" />
-                        </section>
-                    </fieldset>
-                </form>
-            </section>
+            <form class="pure-form pure-form-stacked" @submit="loginSubmit">
+                <fieldset>
+                    <section class="pure-control-group">
+                        <label for="stacked-email" class="labelText">Email Address</label>
+                        <input type="email" id="stacked-email" placeholder="Email Address" required v-model="emailInput"
+                            @input="validate" />
+                    </section>
+                    <section class="pure-control-group">
+                        <label for="stacked-password" class="labelText">Password</label>
+                        <input type="password" id="stacked-password" placeholder="Password" required
+                            v-model="passwordInput" @input="validate" @keypress.prevent.enter="login" />
+                    </section>
+                    <section class="pure-control-group">
+                        <label type="text" class="labelText" id="errorLabel" v-show="loginError">Invalid username or
+                            password entered!</label>
+                    </section>
+                    <section class="pure-controls">
+                        <input type="submit" class="pure-button pure-button-primary" :disabled="!isValid"
+                            value="login" />
+                    </section>
+                </fieldset>
+            </form>
+        </section>
     </main>
 </template>
 
 <style scoped>
-
 main {
     min-height: calc(100vh - 0.5em);
     max-width: none;
@@ -114,7 +131,9 @@ h1 {
     font-family: revert;
 }
 
-.pure-form, .pure-control-group, .pure-controls {
+.pure-form,
+.pure-control-group,
+.pure-controls {
     margin: 1em 0;
 }
 
@@ -122,7 +141,8 @@ h1 {
     margin-bottom: 0.85em;
 }
 
-#stacked-email, #stacked-password {
+#stacked-email,
+#stacked-password {
     width: 57%;
 }
 
