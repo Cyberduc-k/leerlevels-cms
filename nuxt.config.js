@@ -5,6 +5,28 @@ export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'server',
 
+  axios: {
+    baseURL: 'https://leerlevels.azurewebsites.net/api',
+    proxyHeaders: false,
+    credentials: 'same-origin',
+    crossorigin: "https://leerlevels.azurewebsites.net/api",
+    headers: { 'Access-Control-Allow-Origin': 'true',
+               'Content-Type': 'application/json',
+               'credentials': 'same-origin' }
+  },
+
+  publicRuntimeConfig: {
+    axios: {
+      browserBaseURL: 'https://leerlevels.azurewebsites.net/api'
+    }
+  },
+
+  privateRuntimeConfig: {
+    axios: {
+      baseURL: "https://leerlevels.azurewebsites.net/api"
+    }
+  },
+
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'leerlevels-cms',
