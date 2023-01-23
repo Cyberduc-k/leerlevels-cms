@@ -4,7 +4,7 @@ import { Mcq } from "~/src/Mcq";
 import McqRow from "@/components/McqRow.vue";
 import McqAnswerRow from "@/components/McqAnswerRow.vue";
 import { defineComponent } from "vue"
-import { get } from "@/src/requests";
+import { del, get } from "@/src/requests";
 import { AnswerOption } from "~/src/AnswerOption";
 
 export default defineComponent({
@@ -50,7 +50,28 @@ export default defineComponent({
             {
                 console.error(e);
             }
+        },
+        async deleteMcq(id: string)
+        {
+            const index = this.mcqs.findIndex(u => u.id == id);
+            const mcq = this.mcqs[index];
 
+            if (mcq.isNew && this.mcqs != undefined)
+            {
+                this.mcqs.pop();
+            }
+
+            if (!mcq.isNew && confirm(`Are you sure you want to delete question ${id}?`))
+            {
+                try
+                {
+                    await del(`/mcqs/${id}`);
+                    this.$fetch();
+                } catch (e)
+                {
+                    console.error(e);
+                }
+            }
         },
     },
     async fetch()
@@ -89,7 +110,7 @@ export default defineComponent({
                     </tr>
                 </thead>
                 <tbody>
-                    <McqRow v-for="mcq in mcqs" :key="mcq.id" :mcq="mcq" @closeMcq="closeMcq"
+                    <McqRow v-for="mcq in mcqs" :key="mcq.id" :mcq="mcq" @deleteMcq="deleteMcq" @closeMcq="closeMcq"
                         @showMcqAnswers="showMcqAnswers" />
                 </tbody>
             </table>

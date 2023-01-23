@@ -58,6 +58,11 @@ export default defineComponent({
                     });
                     let data = JSON.parse(response.data);
                     this.target.id = data.id;
+                    this.target.label = data.label;
+                    this.target.description = data.description;
+                    this.target.targetExplanation = data.targetExplanation;
+                    this.target.youtubeId = data.youtubeId;
+                    this.target.imageUrl = data.imageUrl;
                 } else
                 {
                     await put(`/targets/${this.target.id}`, {
