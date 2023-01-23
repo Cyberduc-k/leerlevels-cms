@@ -30,7 +30,7 @@ export default defineComponent({
             this.editable = true;
         },
         disableEdit(isNew: boolean, educationType: number, schoolYear: number) {
-            if(isNew) {
+            if (isNew) {
                 this.$emit('closeGroup');
             }
             this.editable = false;
@@ -49,7 +49,7 @@ export default defineComponent({
                     this.group.isNew = false;
                     let response = await post(`/groups/users/${this.group.id}`, {
 
-                    }).then( (response) => { return JSON.parse(response.data)});
+                    }).then((response) => { return JSON.parse(response.data) });
                     this.group.id = response.id;
                     this.group.name = response.name;
                     this.group.subject = response.subject;
@@ -70,21 +70,25 @@ export default defineComponent({
 <template>
     <tr :class="{ editable }">
         <td>{{ group.id }}</td>
-        <td><Editable :editable="editable" v-model="name" /></td>
-        <td><Editable :editable="editable" v-model="subject" /></td>
+        <td>
+            <Editable :editable="editable" v-model="name" />
+        </td>
+        <td>
+            <Editable :editable="editable" v-model="subject" />
+        </td>
         <td>
             <select v-if="editable" v-model="educationType">
                 <option selected disabled>current: {{ EducationType[educationType] }}</option>
                 <option>{{ EducationType[0] }}</option>
                 <option>{{ EducationType[1] }}</option>
                 <option>{{ EducationType[2] }}</option>
-                <option>{{ EducationType[3] }}</option> 
-                <option>{{ EducationType[4] }}</option> 
-                <option>{{ EducationType[5] }}</option> 
-                <option>{{ EducationType[6] }}</option> 
-                <option>{{ EducationType[7] }}</option> 
-                <option>{{ EducationType[8] }}</option> 
-                <option>{{ EducationType[9] }}</option> 
+                <option>{{ EducationType[3] }}</option>
+                <option>{{ EducationType[4] }}</option>
+                <option>{{ EducationType[5] }}</option>
+                <option>{{ EducationType[6] }}</option>
+                <option>{{ EducationType[7] }}</option>
+                <option>{{ EducationType[8] }}</option>
+                <option>{{ EducationType[9] }}</option>
             </select>
             <label v-if="!editable">{{ EducationType[educationType] }}</label>
         </td>
@@ -111,7 +115,8 @@ export default defineComponent({
         </td>
         <td>
             <div class="pure-button-group" role="group">
-                <button v-if="editable" class="pure-button button-delete" @click="disableEdit(group.isNew, group.educationType, group.schoolYear)">Close</button>
+                <button v-if="editable" class="pure-button button-delete"
+                    @click="disableEdit(group.isNew, group.educationType, group.schoolYear)">Close</button>
                 <button v-if="editable" class="pure-button pure-button-primary" @click="save">Save</button>
                 <button v-else class="pure-button pure-button-primary" @click="edit">Edit</button>
                 <button class="pure-button button-delete" @click="$emit('deleteGroup', group.id)">Delete</button>

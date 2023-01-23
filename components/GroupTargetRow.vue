@@ -13,10 +13,10 @@ export default defineComponent({
             required: true,
         },
     },
-    data(){
+    data() {
         return {
             editable: this.target.isNew,
-            label : this.target.label,
+            label: this.target.label,
             description: this.target.description,
             targetExplanation: this.target.targetExplanation,
             youtubeId: this.target.youtubeId,
@@ -34,13 +34,24 @@ export default defineComponent({
 <template>
     <tr :class="{ editable, inactive: !target.isNew }">
         <td>{{ target.id }}</td>
-        <td class="editable-class"><Editable :editable="editable" v-model="label"/></td>
-        <td class="editable-class"><Editable :editable="editable" v-model="description"/></td>
-        <td class="editable-class"><Editable :editable="editable" v-model="targetExplanation"/></td>
-        <td class="editable-class"><Editable :editable="editable" v-model="youtubeId"/></td>
-        <td class="editable-class"><Editable :editable="editable" v-model="imageUrl"/></td>
+        <td class="editable-class">
+            <Editable :editable="editable" v-model="label" />
+        </td>
+        <td class="editable-class">
+            <Editable :editable="editable" v-model="description" />
+        </td>
+        <td class="editable-class">
+            <Editable :editable="editable" v-model="targetExplanation" />
+        </td>
+        <td class="editable-class">
+            <Editable :editable="editable" v-model="youtubeId" />
+        </td>
+        <td class="editable-class">
+            <Editable :editable="editable" v-model="imageUrl" />
+        </td>
         <td>
-            <button class="button-secondary pure-button" @click="displayTargetQuestions(target.id)">Target Questions</button>
+            <button class="button-secondary pure-button" @click="displayTargetQuestions(target.id)">Target
+                Questions</button>
         </td>
     </tr>
 </template>

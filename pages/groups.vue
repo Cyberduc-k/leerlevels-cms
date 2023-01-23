@@ -15,7 +15,7 @@ import McqAnswerRow from "~/components/McqAnswerRow.vue";
 import { defineComponent, PropType } from "vue"
 import { get } from "@/src/requests";
 
-export default defineComponent({ 
+export default defineComponent({
     components: {
         Header,
         GroupRow,
@@ -64,7 +64,7 @@ export default defineComponent({
         }
     },
     methods: {
-      AddGroup() {
+        AddGroup() {
             this.groups.push({
                 isNew: true,
                 id: "N/A",
@@ -79,7 +79,7 @@ export default defineComponent({
         },
         async showGroupUsers(id: string) {
             try {
-                const result = await get(`/groups/${id}`).then( (result) => { return JSON.parse(result.data)});
+                const result = await get(`/groups/${id}`).then((result) => { return JSON.parse(result.data) });
 
                 this.groupId = result.id;
                 this.groupName = result.name;
@@ -91,14 +91,14 @@ export default defineComponent({
 
                 this.showGroupUser = true;
 
-            } catch(e: any) {
+            } catch (e: any) {
                 console.error(e);
             }
 
         },
         async showGroupSets(id: string) {
             try {
-                const result = await get(`/groups/${id}`).then( (result) => { return JSON.parse(result.data)});
+                const result = await get(`/groups/${id}`).then((result) => { return JSON.parse(result.data) });
 
                 this.setGroupId = result.id;
                 this.setGroupName = result.name;
@@ -110,13 +110,13 @@ export default defineComponent({
 
                 this.showGroupSet = true;
 
-            } catch(e: any) {
+            } catch (e: any) {
                 console.error(e);
             }
         },
         async showSetTargets(id: string) {
             try {
-                const result = await get(`/sets/${id}`).then( (result) => { return JSON.parse(result.data)});
+                const result = await get(`/sets/${id}`).then((result) => { return JSON.parse(result.data) });
 
                 this.setId = result.id;
                 this.setName = result.name;
@@ -125,14 +125,13 @@ export default defineComponent({
 
                 this.showSetTarget = true;
 
-            } catch(e: any) {
+            } catch (e: any) {
                 console.error(e);
             }
         },
-        async showTargetMcqs(id: string)
-        {
+        async showTargetMcqs(id: string) {
             try {
-                const result = await get(`/targets/${id}`).then( (result) => {return JSON.parse(result.data)});
+                const result = await get(`/targets/${id}`).then((result) => { return JSON.parse(result.data) });
 
                 this.targetId = result.id;
                 this.targetName = result.label;
@@ -148,7 +147,7 @@ export default defineComponent({
         },
         async showMcqAnswers(id: string) {
             try {
-                const result = await get(`/mcqs/${id}`).then( (result) => {return JSON.parse(result.data)});
+                const result = await get(`/mcqs/${id}`).then((result) => { return JSON.parse(result.data) });
 
                 this.mcqId = result.id;
                 this.mcqText = result.questionText;
@@ -165,12 +164,12 @@ export default defineComponent({
         }
     },
     async fetch() {
-            try {
-                const result = await get(`/groups`).then( (result) => { return JSON.parse(result.data)});
-                this.groups = result;
-            } catch (e: any) {
-                console.error(e);
-            }
+        try {
+            const result = await get(`/groups`).then((result) => { return JSON.parse(result.data) });
+            this.groups = result;
+        } catch (e: any) {
+            console.error(e);
+        }
     },
 });
 
@@ -179,7 +178,7 @@ export default defineComponent({
 <template>
     <main>
         <Header />
-    <section>
+        <section>
             <header class="pure-g">
                 <h1>Groups</h1>
                 <button class="pure-button pure-button-primary button-add" @click="AddGroup">Add Group</button>
@@ -198,91 +197,93 @@ export default defineComponent({
                     </tr>
                 </thead>
                 <tbody>
-                    <GroupRow v-for="group in groups" :key="group.id" :group="group" @closeGroup="closeGroup" @showGroupUsers="showGroupUsers" @showGroupSets="showGroupSets"/>
+                    <GroupRow v-for="group in groups" :key="group.id" :group="group" @closeGroup="closeGroup"
+                        @showGroupUsers="showGroupUsers" @showGroupSets="showGroupSets" />
                 </tbody>
             </table>
         </section>
-        
-    <!--Group Users-->
-    <section v-if="showGroupUser">
-        <header class="pure-g">
-            <h1>Group Users</h1>
-            <h2 class="groupHeaderTwo">&nbsp;(Group: {{ groupId }}&nbsp;</h2>
-            <h2 class="groupHeaderTwo">-&nbsp;Name: {{ groupName }}&nbsp;</h2>
-            <h2 class="groupHeaderTwo">-&nbsp;Subject: {{ groupSubject }}&nbsp;</h2>
-            <h2 class="groupHeaderTwo">-&nbsp;Education type: {{ EducationType[groupEducationType] }}&nbsp;</h2>
-            <h2 class="groupHeaderTwo">-&nbsp;Schoolyear: {{ SchoolYear[groupSchoolYear] }})</h2>
-        </header>
-        <table class="pure-table pure-table-horizontal">
-            <thead>
-                <tr>
-                    <th id="id-column">Id</th>
-                    <th>Email</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>User Name</th>
-                    <th>Role</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <GroupUserRow v-for="user in groupUsers" :key="user.id" :user="user"/>
-            </tbody>
-        </table>
-    </section>
 
-    <!--Group Sets-->
-    <section v-if="showGroupSet">
-        <header class="pure-g">
-            <h1>Group Sets</h1>
-            <h2 class="groupHeaderTwo">&nbsp;(Group: {{ setGroupId }}&nbsp;</h2>
-            <h2 class="groupHeaderTwo">-&nbsp;Name: {{ setGroupName }}&nbsp;</h2>
-            <h2 class="groupHeaderTwo">-&nbsp;Subject: {{ setGroupSubject }}&nbsp;</h2>
-            <h2 class="groupHeaderTwo">-&nbsp;Education type: {{ EducationType[setGroupEducationType] }}&nbsp;</h2>
-            <h2 class="groupHeaderTwo">-&nbsp;Schoolyear: {{ SchoolYear[setGroupSchoolYear] }})</h2>
-        </header>
-        <table class="pure-table pure-table-horizontal">
-            <thead>
-                <tr>
-                    <th id="id-column">Id</th>
-                    <th>Name</th>
-                    <th>Set Targets</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <GroupSetRow v-for="set in groupSets" :key="set.id" :set="set" @showSetTargets="showSetTargets"/>
-            </tbody>
-        </table>
-    </section>
+        <!--Group Users-->
+        <section v-if="showGroupUser">
+            <header class="pure-g">
+                <h1>Group Users</h1>
+                <h2 class="groupHeaderTwo">&nbsp;(Group: {{ groupId }}&nbsp;</h2>
+                <h2 class="groupHeaderTwo">-&nbsp;Name: {{ groupName }}&nbsp;</h2>
+                <h2 class="groupHeaderTwo">-&nbsp;Subject: {{ groupSubject }}&nbsp;</h2>
+                <h2 class="groupHeaderTwo">-&nbsp;Education type: {{ EducationType[groupEducationType] }}&nbsp;</h2>
+                <h2 class="groupHeaderTwo">-&nbsp;Schoolyear: {{ SchoolYear[groupSchoolYear] }})</h2>
+            </header>
+            <table class="pure-table pure-table-horizontal">
+                <thead>
+                    <tr>
+                        <th id="id-column">Id</th>
+                        <th>Email</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>User Name</th>
+                        <th>Role</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <GroupUserRow v-for="user in groupUsers" :key="user.id" :user="user" />
+                </tbody>
+            </table>
+        </section>
 
-    <!--Set Targets-->
-    <section v-if="showSetTarget">
-        <header class="pure-g">
-            <h1>Set Targets</h1>
-            <h2 class="groupHeaderTwo">&nbsp;(Set: {{ setId }}&nbsp;</h2>
-            <h2 class="groupHeaderTwo">-&nbsp;Name: {{ setName }})</h2>
-        </header>
-        <table class="pure-table pure-table-horizontal">
-            <thead>
-                <tr>
-                    <th id="id-column">Id</th>
-                    <th>Label</th>
-                    <th>Description</th>
-                    <th>Target Explaination</th>
-                    <th>Youtube Id</th>
-                    <th>Image Id</th>
-                    <th>Target Questions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <GroupTargetRow v-for="target in setTargets" :key="target.id" :target="target" @showTargetMcqs="showTargetMcqs"/>
-            </tbody>
-        </table>
-    </section>
+        <!--Group Sets-->
+        <section v-if="showGroupSet">
+            <header class="pure-g">
+                <h1>Group Sets</h1>
+                <h2 class="groupHeaderTwo">&nbsp;(Group: {{ setGroupId }}&nbsp;</h2>
+                <h2 class="groupHeaderTwo">-&nbsp;Name: {{ setGroupName }}&nbsp;</h2>
+                <h2 class="groupHeaderTwo">-&nbsp;Subject: {{ setGroupSubject }}&nbsp;</h2>
+                <h2 class="groupHeaderTwo">-&nbsp;Education type: {{ EducationType[setGroupEducationType] }}&nbsp;</h2>
+                <h2 class="groupHeaderTwo">-&nbsp;Schoolyear: {{ SchoolYear[setGroupSchoolYear] }})</h2>
+            </header>
+            <table class="pure-table pure-table-horizontal">
+                <thead>
+                    <tr>
+                        <th id="id-column">Id</th>
+                        <th>Name</th>
+                        <th>Set Targets</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <GroupSetRow v-for="set in groupSets" :key="set.id" :set="set" @showSetTargets="showSetTargets" />
+                </tbody>
+            </table>
+        </section>
 
-    <!--Target Questions-->
-    <section v-if="showTargetMcq">
+        <!--Set Targets-->
+        <section v-if="showSetTarget">
+            <header class="pure-g">
+                <h1>Set Targets</h1>
+                <h2 class="groupHeaderTwo">&nbsp;(Set: {{ setId }}&nbsp;</h2>
+                <h2 class="groupHeaderTwo">-&nbsp;Name: {{ setName }})</h2>
+            </header>
+            <table class="pure-table pure-table-horizontal">
+                <thead>
+                    <tr>
+                        <th id="id-column">Id</th>
+                        <th>Label</th>
+                        <th>Description</th>
+                        <th>Target Explaination</th>
+                        <th>Youtube Id</th>
+                        <th>Image Id</th>
+                        <th>Target Questions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <GroupTargetRow v-for="target in setTargets" :key="target.id" :target="target"
+                        @showTargetMcqs="showTargetMcqs" />
+                </tbody>
+            </table>
+        </section>
+
+        <!--Target Questions-->
+        <section v-if="showTargetMcq">
             <header class="pure-g">
                 <h1>Target Questions</h1>
                 <h2 class="groupHeaderTwo">&nbsp;(Target: {{ targetId }}&nbsp;</h2>
@@ -299,17 +300,17 @@ export default defineComponent({
                     </tr>
                 </thead>
                 <tbody>
-                    <GroupMcqRow v-for="mcq in targetMcqs" :key="mcq.id" :mcq="mcq" @showMcqAnswers="showMcqAnswers"/>
+                    <GroupMcqRow v-for="mcq in targetMcqs" :key="mcq.id" :mcq="mcq" @showMcqAnswers="showMcqAnswers" />
                 </tbody>
             </table>
         </section>
 
-    <!-- Question Answers-->
+        <!-- Question Answers-->
         <section v-if="showMcqAnswer">
             <header class="pure-g">
                 <h1>Question Answer Options</h1>
                 <h2 class="groupHeaderTwo">&nbsp;(Multiple Choice Question: {{ mcqId }})</h2>
-               <!-- <h2 class="groupHeaderTwo">-&nbsp;Text: {{ mcqText }}&nbsp;</h2>
+                <!-- <h2 class="groupHeaderTwo">-&nbsp;Text: {{ mcqText }}&nbsp;</h2>
                 <h2 class="groupHeaderTwo">-&nbsp;Explanation: {{ mcqExplanation }}&nbsp;</h2>
                 <h2 class="groupHeaderTwo">-&nbsp;Allow Random: {{ mcqAllowRandom }})</h2> -->
             </header>
@@ -324,7 +325,7 @@ export default defineComponent({
                     </tr>
                 </thead>
                 <tbody>
-                    <McqAnswerRow v-for="answerOption in mcqAnswers" :key="answerOption.id" :answer="answerOption"/>
+                    <McqAnswerRow v-for="answerOption in mcqAnswers" :key="answerOption.id" :answer="answerOption" />
                 </tbody>
             </table>
         </section>
@@ -333,7 +334,6 @@ export default defineComponent({
 </template>
 
 <style scoped>
-
 table {
     width: 100%;
 }
@@ -350,5 +350,4 @@ h1 {
     margin-left: auto;
     align-self: center;
 }
-
 </style>

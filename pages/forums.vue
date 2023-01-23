@@ -19,7 +19,7 @@ export default defineComponent({
         }
     },
     methods: {
-      AddForum() {
+        AddForum() {
             this.forums.push({
                 isNew: true,
                 id: "N/A",
@@ -28,10 +28,10 @@ export default defineComponent({
             });
         },
         async deleteForum(id: string) {
-                const index = this.forums.findIndex(u => u.id == id);
-                const forum = this.forums[index];
+            const index = this.forums.findIndex(u => u.id == id);
+            const forum = this.forums[index];
 
-            if(forum.isNew && this.forums != undefined) {
+            if (forum.isNew && this.forums != undefined) {
                 this.forums.pop();
             }
 
@@ -46,7 +46,7 @@ export default defineComponent({
     },
     async fetch() {
         try {
-            const result = await get(`/forums`).then( (result) => { return JSON.parse(result.data)});
+            const result = await get(`/forums`).then((result) => { return JSON.parse(result.data) });
             this.forums = result;
         } catch (e: any) {
             console.error(e);
@@ -74,7 +74,7 @@ export default defineComponent({
                     </tr>
                 </thead>
                 <tbody>
-                    <ForumRow v-for="forum in forums" :key="forum.id" :forum="forum" @deleteForum="deleteForum"/>
+                    <ForumRow v-for="forum in forums" :key="forum.id" :forum="forum" @deleteForum="deleteForum" />
                 </tbody>
             </table>
         </section>

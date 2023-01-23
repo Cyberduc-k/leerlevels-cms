@@ -13,8 +13,7 @@ export default defineComponent({
             required: true,
         },
     },
-    data()
-    {
+    data() {
         return {
             editable: this.mcq.isNew,
             text: this.mcq.questionText,

@@ -37,7 +37,7 @@ export default defineComponent({
             const index = this.users.findIndex(u => u.id == id);
             const user = this.users[index];
 
-            if(!user.isNew && confirm(`Are you sure you want to re-enable user ${id}?`)) {
+            if (!user.isNew && confirm(`Are you sure you want to re-enable user ${id}?`)) {
                 try {
                     await put(`/users/${id}`, {
                         isActive: true
@@ -54,7 +54,7 @@ export default defineComponent({
             const index = this.users.findIndex(u => u.id == id);
             const user = this.users[index];
 
-            if(user.isNew && this.users != undefined) {
+            if (user.isNew && this.users != undefined) {
                 this.users.pop();
             }
 
@@ -81,7 +81,7 @@ export default defineComponent({
     },
     async fetch() {
         try {
-            const paginated = await get(`/users?limit=${this.limit}&page=${this.page}`).then( (paginated) => { return JSON.parse(paginated.data)});
+            const paginated = await get(`/users?limit=${this.limit}&page=${this.page}`).then((paginated) => { return JSON.parse(paginated.data) });
             this.users = paginated.items;
         } catch (e: any) {
             if (e.status === 401) {
@@ -116,7 +116,8 @@ export default defineComponent({
                     </tr>
                 </thead>
                 <tbody>
-                    <UserRow v-for="user in users" :key="user.id" :user="user" @activateUser="activateUser" @deleteUser="deleteUser" @fetch="$fetch"/>
+                    <UserRow v-for="user in users" :key="user.id" :user="user" @activateUser="activateUser"
+                        @deleteUser="deleteUser" @fetch="$fetch" />
                 </tbody>
             </table>
             <div class="pure-button-group pagination" role="group">

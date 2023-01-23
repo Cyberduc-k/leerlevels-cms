@@ -30,10 +30,18 @@ export default defineComponent({
 <template>
     <tr :class="{ editable, inactive: !user.isActive }">
         <td>{{ user.id }}</td>
-        <td class="email-editable"><Editable :editable="editable" v-model="email" /></td>
-        <td class="editable-class"><Editable :editable="editable" v-model="firstName" /></td>
-        <td class="editable-class"><Editable :editable="editable" v-model="lastName" /></td>
-        <td class="editable-class"><Editable :editable="editable" v-model="userName" /></td>
+        <td class="email-editable">
+            <Editable :editable="editable" v-model="email" />
+        </td>
+        <td class="editable-class">
+            <Editable :editable="editable" v-model="firstName" />
+        </td>
+        <td class="editable-class">
+            <Editable :editable="editable" v-model="lastName" />
+        </td>
+        <td class="editable-class">
+            <Editable :editable="editable" v-model="userName" />
+        </td>
         <td>
             <label v-if="!editable">{{ userRole[role] }}</label>
         </td>
@@ -41,7 +49,6 @@ export default defineComponent({
 </template>
 
 <style scoped>
-
 .email-editable {
     max-width: 175px;
     word-wrap: anywhere;
@@ -50,6 +57,7 @@ export default defineComponent({
 .editable-class {
     max-width: 80px;
 }
+
 .pure-button-group {
     float: right;
 }

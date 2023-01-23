@@ -6,10 +6,8 @@ export default defineComponent({
     components: {
         Header,
     },
-    beforeCreate()
-    {
-        if (this.$store.state.authToken === "")
-        {
+    beforeCreate() {
+        if (this.$store.state.authToken === "") {
             this.$router.replace({ path: "/login", query: { next: "/" } });
         }
     },

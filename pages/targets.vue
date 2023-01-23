@@ -21,8 +21,7 @@ export default defineComponent({
         showTargetMcq: false,
     }),
     methods: {
-        AddTarget()
-        {
+        AddTarget() {
             this.targets.push({
                 isNew: true,
                 id: "N/A",
@@ -34,57 +33,45 @@ export default defineComponent({
                 mcqs: [],
             });
         },
-        closeTarget()
-        {
+        closeTarget() {
             this.targets.pop();
         },
-        async showTargetMcqs(id: string)
-        {
-            try
-            {
+        async showTargetMcqs(id: string) {
+            try {
                 const result = await get(`/targets/${id}`);
                 const data = JSON.parse(result.data);
                 this.targetId = data.id;
                 this.targetName = data.label;
                 this.targetMcqs = data.mcqs;
                 this.showTargetMcq = true;
-            } catch (e: any)
-            {
+            } catch (e: any) {
                 console.error(e);
             }
         },
-        async deleteTarget(id: string)
-        {
+        async deleteTarget(id: string) {
             const index = this.targets.findIndex(u => u.id == id);
             const target = this.targets[index];
 
-            if (target.isNew && this.targets != undefined)
-            {
+            if (target.isNew && this.targets != undefined) {
                 this.targets.pop();
             }
 
-            if (!target.isNew && confirm(`Are you sure you want to delete target ${id}?`))
-            {
-                try
-                {
+            if (!target.isNew && confirm(`Are you sure you want to delete target ${id}?`)) {
+                try {
                     await del(`/targets/${id}`);
                     this.$fetch();
-                } catch (e)
-                {
+                } catch (e) {
                     console.error(e);
                 }
             }
         }
     },
-    async fetch()
-    {
-        try
-        {
+    async fetch() {
+        try {
             const result = await get(`/targets`);
             const data = JSON.parse(result.data);
             this.targets = data.items;
-        } catch (e: any)
-        {
+        } catch (e: any) {
             console.error(e);
         }
     },

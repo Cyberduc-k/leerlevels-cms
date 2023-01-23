@@ -3,8 +3,7 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
     methods: {
-        logout()
-        {
+        logout() {
             this.$store.commit('setToken', "");
             this.$store.commit('setAuthTokenExpiresAt', "");
             this.$store.commit('setStateUser', {});

@@ -14,8 +14,7 @@ export default defineComponent({
             required: true,
         },
     },
-    data()
-    {
+    data() {
         return {
             editable: this.target.isNew,
             label: this.target.label,
@@ -26,28 +25,21 @@ export default defineComponent({
         };
     },
     methods: {
-        edit()
-        {
+        edit() {
             this.editable = true;
         },
-        disableEdit(isNew: boolean)
-        {
-            if (isNew)
-            {
+        disableEdit(isNew: boolean) {
+            if (isNew) {
                 this.$emit('closeTarget');
             }
             this.editable = false;
         },
-        displayTargetMcqs(id: string)
-        {
+        displayTargetMcqs(id: string) {
             this.$emit('showTargetMcqs', id);
         },
-        async save()
-        {
-            try
-            {
-                if (this.target.isNew)
-                {
+        async save() {
+            try {
+                if (this.target.isNew) {
                     this.target.isNew = false;
                     let response = await post(`/targets`, {
                         label: this.label,
@@ -63,8 +55,7 @@ export default defineComponent({
                     this.target.targetExplanation = data.targetExplanation;
                     this.target.youtubeId = data.youtubeId;
                     this.target.imageUrl = data.imageUrl;
-                } else
-                {
+                } else {
                     await put(`/targets/${this.target.id}`, {
                         label: this.label,
                         description: this.description,
@@ -73,11 +64,9 @@ export default defineComponent({
                         imageUrl: this.imageUrl,
                     });
                 }
-            } catch (e)
-            {
+            } catch (e) {
                 console.error(e);
-            } finally
-            {
+            } finally {
                 this.editable = false;
             }
         }

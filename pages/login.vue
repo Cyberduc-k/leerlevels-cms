@@ -3,8 +3,7 @@ import { defineComponent } from "vue";
 import { UserRole } from "~/src/User";
 
 export default defineComponent({
-    data()
-    {
+    data() {
         return {
             isValid: false,
             loginError: false,
@@ -13,60 +12,46 @@ export default defineComponent({
             emailRegex: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/,
         }
     },
-    beforeCreate()
-    {
+    beforeCreate() {
         //check if the user is still logged in and redirect to home page
-        if (this.$store.state.authToken !== "")
-        {
+        if (this.$store.state.authToken !== "") {
             this.$router.push('/');
         }
     },
     methods: {
-        validate()
-        {
+        validate() {
             this.isValid = this.checkEmail() && this.passwordInput !== "";
         },
-        loginSubmit(): boolean
-        {
+        loginSubmit(): boolean {
             event?.preventDefault();
             this.login();
             return false;
         },
-        async login()
-        {
-            if (this.checkEmail())
-            {
-                if (await this.$store.dispatch("login", { email: this.emailInput, password: this.passwordInput }))
-                {
+        async login() {
+            if (this.checkEmail()) {
+                if (await this.$store.dispatch("login", { email: this.emailInput, password: this.passwordInput })) {
                     this.emailInput = "";
                     this.passwordInput = "";
 
-                    if (this.$store.state.stateUser.role == UserRole.Administrator)
-                    {
-                        if (this.$route.query.next)
-                        {
+                    if (this.$store.state.stateUser.role == UserRole.Administrator) {
+                        if (this.$route.query.next) {
                             this.$router.push(this.$route.query.next as string);
-                        } else
-                        {
+                        } else {
                             this.$router.push("/");
                         }
                         this.loginError = false;
                     }
-                    else
-                    {
+                    else {
                         this.$router.push("/login");
                     }
-                } else
-                {
+                } else {
                     this.loginError = true;
                 }
-            } else
-            {
+            } else {
                 console.log("the email address could not be validated");
             }
         },
-        checkEmail()
-        {
+        checkEmail() {
             //this will return true if the input is not empty and matches the regular expression of a valid email address, otherwise it returns false
             return !!((this.emailInput === "") ? "" : !!(this.emailRegex.test(this.emailInput)));
         },

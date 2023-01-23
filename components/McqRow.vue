@@ -14,8 +14,7 @@ export default defineComponent({
             required: true,
         },
     },
-    data()
-    {
+    data() {
         return {
             editable: this.mcq.isNew,
             text: this.mcq.questionText,
@@ -24,28 +23,21 @@ export default defineComponent({
         };
     },
     methods: {
-        edit()
-        {
+        edit() {
             this.editable = true;
         },
-        disableEdit(isNew: boolean)
-        {
-            if (isNew)
-            {
+        disableEdit(isNew: boolean) {
+            if (isNew) {
                 this.$emit('closeMcq');
             }
             this.editable = false;
         },
-        displayMcqAnswers(id: string)
-        {
+        displayMcqAnswers(id: string) {
             this.$emit('showMcqAnswers', id);
         },
-        async save()
-        {
-            try
-            {
-                if (this.mcq.isNew)
-                {
+        async save() {
+            try {
+                if (this.mcq.isNew) {
                     this.mcq.isNew = false;
                     let response = await post(`/mcqs`, {
                         questionText: this.text,
@@ -57,19 +49,16 @@ export default defineComponent({
                     this.mcq.questionText = data.questionText;
                     this.mcq.explanation = data.explanation;
                     this.mcq.allowRandom = data.allowRandom;
-                } else
-                {
+                } else {
                     await put(`/mcqs/${this.mcq.id}`, {
                         questionText: this.text,
                         explanation: this.explanation,
                         allowRandom: this.allowRandom,
                     });
                 }
-            } catch (e)
-            {
+            } catch (e) {
                 console.error(e);
-            } finally
-            {
+            } finally {
                 this.editable = false;
             }
         }

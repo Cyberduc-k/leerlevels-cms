@@ -13,10 +13,10 @@ export default defineComponent({
             required: true,
         },
     },
-    data(){
+    data() {
         return {
             editable: this.set.isNew,
-            name : this.set.name,
+            name: this.set.name,
         };
     },
     methods: {
@@ -30,7 +30,9 @@ export default defineComponent({
 <template>
     <tr :class="{ editable, inactive: !set.isNew }">
         <td>{{ set.id }}</td>
-        <td class="editable-class"><Editable :editable="editable" v-model="name"/></td>
+        <td class="editable-class">
+            <Editable :editable="editable" v-model="name" />
+        </td>
         <td>
             <button class="button-secondary pure-button" @click="displaySetTargets(set.id)">Set Targets</button>
         </td>

@@ -13,8 +13,7 @@ export default defineComponent({
             required: true,
         },
     },
-    data()
-    {
+    data() {
         return {
             editable: this.answer.isNew,
             text: this.answer.text,

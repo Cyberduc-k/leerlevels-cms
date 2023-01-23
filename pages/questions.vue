@@ -21,8 +21,7 @@ export default defineComponent({
         showMcqAnswer: false,
     }),
     methods: {
-        AddMcq()
-        {
+        AddMcq() {
             this.mcqs.push({
                 isNew: true,
                 id: "N/A",
@@ -32,57 +31,45 @@ export default defineComponent({
                 answerOptions: [],
             });
         },
-        closeMcq()
-        {
+        closeMcq() {
             this.mcqs.pop();
         },
-        async showMcqAnswers(id: string)
-        {
-            try
-            {
+        async showMcqAnswers(id: string) {
+            try {
                 const result = await get(`/mcqs/${id}`);
                 const data = JSON.parse(result.data);
                 this.mcqId = data.id;
                 this.mcqText = data.questionText;
                 this.mcqAnswers = data.answerOptions;
                 this.showMcqAnswer = true;
-            } catch (e: any)
-            {
+            } catch (e: any) {
                 console.error(e);
             }
         },
-        async deleteMcq(id: string)
-        {
+        async deleteMcq(id: string) {
             const index = this.mcqs.findIndex(u => u.id == id);
             const mcq = this.mcqs[index];
 
-            if (mcq.isNew && this.mcqs != undefined)
-            {
+            if (mcq.isNew && this.mcqs != undefined) {
                 this.mcqs.pop();
             }
 
-            if (!mcq.isNew && confirm(`Are you sure you want to delete question ${id}?`))
-            {
-                try
-                {
+            if (!mcq.isNew && confirm(`Are you sure you want to delete question ${id}?`)) {
+                try {
                     await del(`/mcqs/${id}`);
                     this.$fetch();
-                } catch (e)
-                {
+                } catch (e) {
                     console.error(e);
                 }
             }
         },
     },
-    async fetch()
-    {
-        try
-        {
+    async fetch() {
+        try {
             const result = await get(`/mcqs`);
             const data = JSON.parse(result.data);
             this.mcqs = data.items;
-        } catch (e: any)
-        {
+        } catch (e: any) {
             console.error(e);
         }
     },
